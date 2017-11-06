@@ -106,7 +106,7 @@
 				String  RequestStatus=retVal.get("RequestStatus");
 				List<Node> nodes=OTUtility.getChildren(authToken,85457);//parent ID
 				List<Node> nodes2=OTUtility.excludedNodes(authToken,85457);
-				
+				System.out.println("Path    "+System.getProperty("java.io.tmpdir"));
 				
 			%>	
 			
