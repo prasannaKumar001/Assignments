@@ -4,13 +4,18 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPElement;
@@ -21,6 +26,7 @@ import javax.xml.ws.BindingProvider;
 import javax.xml.ws.soap.MTOMFeature;
 import javax.xml.ws.soap.SOAPFaultException;
 
+import org.apache.commons.collections4.map.HashedMap;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
@@ -31,7 +37,9 @@ import com.opentext.livelink.service.core.BooleanValue;
 import com.opentext.livelink.service.core.ContentService;
 import com.opentext.livelink.service.core.ContentService_Service;
 import com.opentext.livelink.service.core.DataValue;
+import com.opentext.livelink.service.core.DateValue;
 import com.opentext.livelink.service.core.FileAtts;
+import com.opentext.livelink.service.core.IntegerValue;
 import com.opentext.livelink.service.core.StringValue;
 import com.opentext.livelink.service.docman.AttributeGroup;
 import com.opentext.livelink.service.docman.DocumentManagement;
@@ -48,14 +56,16 @@ import com.sun.xml.internal.ws.developer.WSBindingProvider;
 
 public class OTUtility {
 	
-	public static final String USERNAME="otadmin@otds.admin";
-	public static final String PASSWORD="SEC@crmp!2017";
+	//public static final String USERNAME="otadmin@otds.admin";
+	//public static final String PASSWORD="SEC@crmp!2017";
 	public static final String ECM_API_NAMESPACE = "urn:api.ecm.opentext.com"; // The namespace of the OTAuthentication object
 	public static final String CORE_NAMESPACE = "urn:Core.service.livelink.opentext.com";
 	static final Logger LOGGER = Logger.getLogger(OTUtility.class);
 	
-	public static String getAuthToken()
+	public static String getAuthToken(String USERNAME,String PASSWORD)
 	{
+		
+		
 		LOGGER.info("Auth Request for USER: "+USERNAME);            		
 		Authentication_Service authService = null;
 		Authentication authClient = null;
@@ -80,6 +90,8 @@ public class OTUtility {
 		catch (SOAPFaultException e)
 		{
 			LOGGER.error(e.getMessage());
+			LOGGER.error(e.getFault().getFaultCode());
+			LOGGER.info(e.getMessage());
 			System.out.println("FAILED!\n");
 			System.out.println(e.getFault().getFaultCode() + " : " + e.getMessage());
 			
@@ -163,7 +175,7 @@ public class OTUtility {
 		SOAPHeaderElement otAuthElement = null;
 		SOAPElement authTokenElement = null;
 		List<Header> headers = null;
-				// We need to manually set the SOAP headers to include the authentication token and context ID
+		// We need to manually set the SOAP headers to include the authentication token and context ID
 		try
 		{
 			otAuth = new OTAuthentication();
@@ -245,14 +257,13 @@ public class OTUtility {
 		return downloadStream;
 	}
 	
-	public static List<Node> getChildren(long parentID)
+	public static List<Node> getChildren(String authToken,long parentID)
 	{
 		DocumentManagement docManClient=null;
-		String authToken=null;
 		List<Node> nodes=null;
 		try
 		{
-			authToken=OTUtility.getAuthToken();
+			//authToken=OTUtility.getAuthToken();
 			docManClient=OTUtility.getDocumentManagement(authToken);
 			nodes=docManClient.listNodes(parentID, false);
 			
@@ -272,13 +283,13 @@ public class OTUtility {
 		return node.getName();
 	}
 	
-	public static void uploaddocument(String filePath)
+	public static void uploaddocument(String authtoken,String filePath,int parentID,int categoryTemplateID)
 	{
-		String authtoken=OTUtility.getAuthToken();
+		//String authtoken=OTUtility.getAuthToken();
 		OTAuthentication otAuth = null;
 		DocumentManagement docManClient=OTUtility.getDocumentManagement(authtoken);
 		String contextID = null;
-		int PARENT_ID=85457;
+		int PARENT_ID=parentID;
 		ContentService_Service contentService = null;
 		ContentService contentServiceClient = null;
 		File file = new File(filePath);
@@ -365,7 +376,7 @@ public class OTUtility {
 			System.out.println("New document uploaded with ID = " + objectID);
 			
 			int dataid=Integer.valueOf(objectID);
-			OTUtility.addCategory(dataid);
+			OTUtility.addCategory(authtoken,dataid,categoryTemplateID);
 			
 		}
 		catch (SOAPFaultException | IOException | DatatypeConfigurationException | SOAPException e)
@@ -377,13 +388,13 @@ public class OTUtility {
 		
 	}
 	
-	public static String copyDocument(int parentid,int docID,String newName)
+	public static String copyDocument(String authToken,int parentid,int docID,String newName)
 	{
 		DocumentManagement docManClient=null;
-		String authToken=null;
+		
 		try
 		{
-			authToken=OTUtility.getAuthToken();
+			//authToken=OTUtility.getAuthToken();
 
 			docManClient=OTUtility.getDocumentManagement(authToken);
 			Node n=docManClient.copyNode(docID, parentid, newName, null);
@@ -397,15 +408,15 @@ public class OTUtility {
 		
 	}
 	
-	public static String moveDocument(int dataID, int parentID)
+	public static String moveDocument(String authToken,int dataID, int parentID)
 	{
 		DocumentManagement docManClient=null;
-		String authToken=null;
+		
 		try
 		{
 			System.out.println("dataid "+dataID);
 			System.out.println("parentID "+parentID);
-			authToken=OTUtility.getAuthToken();
+			//authToken=OTUtility.getAuthToken();
 
 			docManClient=OTUtility.getDocumentManagement(authToken);
 			MoveOptions moveoptions=new MoveOptions();
@@ -420,13 +431,13 @@ public class OTUtility {
 		return "Moved";
 	}
 	
-	public static String deleteDocument(int dataID)
+	public static String deleteDocument(String authToken,int dataID)
 	{
 		DocumentManagement docManClient=null;
-		String authToken=null;
+		
 		try
 		{
-			authToken=OTUtility.getAuthToken();
+			//authToken=OTUtility.getAuthToken();
 
 			docManClient=OTUtility.getDocumentManagement(authToken);
 			docManClient.deleteNode(dataID);
@@ -438,10 +449,10 @@ public class OTUtility {
 		return "deleted";
 	}
 	
-	public static void addCategory(int dataid)
+	public static void addCategory(String authToken,int dataid,int categoryTemplateID)
 	{
 		DocumentManagement docManClient=null;
-		String authToken=null;
+		
 		AttributeGroup categoryTemplate = null;
 		List<AttributeGroup> categoryAttr;
 		List attributes=new ArrayList<>();
@@ -449,9 +460,9 @@ public class OTUtility {
 		Node n;
 		try
 		{
-			authToken=OTUtility.getAuthToken();
+			//authToken=OTUtility.getAuthToken();
 			docManClient=OTUtility.getDocumentManagement(authToken);
-			categoryTemplate = docManClient.getCategoryTemplate(89745);
+			categoryTemplate = docManClient.getCategoryTemplate(categoryTemplateID);
 			StringValue directedByValue = (StringValue) categoryTemplate.getValues().get(4);
 			n=docManClient.getNode(dataid);
 			//metadata=n.getMetadata();
@@ -491,16 +502,16 @@ public class OTUtility {
 		}
 	}
 	
-	public static void updateCategory(int dataid)
+	public static void updateCategory(String authToken,int dataid,int categoryTemplateID)
 	{
 		DocumentManagement fDocMan=null;
 		Node node;
-		String authToken=null;
+		
 		try
 		{
-			authToken=OTUtility.getAuthToken();
+			//authToken=OTUtility.getAuthToken();
 			fDocMan=OTUtility.getDocumentManagement(authToken);
-			AttributeGroup attrgroup = fDocMan.getCategoryTemplate(89745);
+			AttributeGroup attrgroup = fDocMan.getCategoryTemplate(categoryTemplateID);
 			String toBeUpdateCatName =attrgroup.getDisplayName();
 			List <AttributeGroup> nodeattrgroups = new ArrayList<AttributeGroup>();
 			node=fDocMan.getNode(dataid);
@@ -577,15 +588,15 @@ public class OTUtility {
 		}
 	}
 	
-	public static List<Node> excludedNodes(int dataID)
+	public static List<Node> excludedNodes(String authToken,int dataID)
 	{
 		DocumentManagement fDocMan=null;
 		Node node;
-		String authToken=null;
+		
 		List<Node> excludedNodes=new ArrayList<Node>();
 		try
 		{
-			authToken=OTUtility.getAuthToken();
+			//authToken=OTUtility.getAuthToken();
 			fDocMan=OTUtility.getDocumentManagement(authToken);
 			List <AttributeGroup> nodeattrgroups = new ArrayList<AttributeGroup>();
 			//node=fDocMan.getNode(dataID);
@@ -638,6 +649,107 @@ public class OTUtility {
 			e.printStackTrace();
 		}
 		return excludedNodes;
+	}
+	
+	public static Map<String,String> getNode(String authToken,int dataID)
+	{
+		DocumentManagement docManClient=null;
+		Node node = null;
+		Map<String,String> retVal=new HashedMap<String,String>();
+		
+		try
+		{
+			docManClient=OTUtility.getDocumentManagement(authToken);
+			node=docManClient.getNode(dataID);
+			Metadata updateMetadata =node.getMetadata();
+			List <AttributeGroup> nodeattrgroups = new ArrayList<AttributeGroup>();
+			List<DataValue> values=new ArrayList<DataValue>();
+			
+			if (updateMetadata!= null )
+			{
+				nodeattrgroups = updateMetadata.getAttributeGroups();	
+				if (nodeattrgroups.size()>0)
+				{
+					for (AttributeGroup atg:nodeattrgroups)
+					{
+						if(atg!=null)
+						{
+							int i=0;
+							values=atg.getValues();
+							for(DataValue data:values)
+							{
+								String dataType=data.getClass().getName();
+				    			
+				    			if(dataType.endsWith("StringValue"))
+				    			{
+				    				StringValue str = (StringValue) data;
+				    				List<String> dataValues=str.getValues();
+				    				for(String s:dataValues)
+				    				{	
+				    					retVal.put(data.getDescription(), s);
+				    					System.out.println(s);
+				    				}
+					    			//str.getValues().add(true);
+				    				//System.out.println("String");
+				    			}
+				    			if(dataType.endsWith("DateValue"))
+				    			{
+				    				DateValue str = (DateValue) data;
+				    				List<XMLGregorianCalendar> dataValues=str.getValues();
+				    				for(XMLGregorianCalendar s:dataValues)
+				    				{	
+				    					
+				    					Date d=new Date(s.getYear(),s.getMonth(),s.getDay());
+				    					 try 
+				    					    {  
+				    					      
+				    					      DateFormat formatter; 
+				    					      Date date; 
+				    					      formatter = new SimpleDateFormat("MM/dd/yyyy");
+				    					      String d1=formatter.format(d);
+				    					      retVal.put(data.getDescription(),d1);
+				    					    } 
+				    					    catch (Exception e)
+				    					    {}
+				    					System.out.println();
+				    				}
+				    				//System.out.println("Date");
+				    			}
+				    			if(dataType.endsWith("BooleanValue"))
+				    			{
+				    				//System.out.println("boolean");
+				    				BooleanValue str = (BooleanValue) data;
+				    				List<Boolean> booleanValue=str.getValues();
+				    				for(Boolean b:booleanValue)
+				    				{	
+				    					retVal.put(data.getDescription(), b.toString());
+				    					System.out.println(b.toString());
+				    				}
+				    			}
+				    			if(dataType.endsWith("IntegerValue"))
+				    			{
+				    				IntegerValue val=(IntegerValue) data; 
+				    				List<Long> integerValue=val.getValues();
+				    				for(Long j:integerValue)
+				    				{
+				    					retVal.put(data.getDescription(), String.valueOf(j));
+				    				}
+				    			}
+								//System.out.println("value: "+atg.getValues().get(i));
+								System.out.println(data.getDescription());
+								//System.out.println(data.getKey());
+								//System.out.println();
+								i++;
+							}
+						}
+					}
+				}
+			}
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+		}
+		return retVal;
 	}
 	
 }

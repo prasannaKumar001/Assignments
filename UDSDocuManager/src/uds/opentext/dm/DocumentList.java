@@ -5,7 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-
+import java.util.Properties;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -36,12 +36,19 @@ public class DocumentList extends HttpServlet {
     
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		Properties prop = new Properties();
+		prop.load(getServletContext().getResourceAsStream("/WEB-INF/config.properties"));
+		String USERNAME=prop.getProperty("UDS.USERNAME");
+		String PASSWORD=prop.getProperty("UDS.PASSWORD");
+		
+		String authToken=OTUtility.getAuthToken(USERNAME, PASSWORD);
+		
 		String param=request.getParameter("dataID");
 		String action=request.getParameter("action");
 		if(action.equals("download") || action.equals("Display"))
 		{
 			int dataID=Integer.valueOf(param);
-			String authToken=OTUtility.getAuthToken();
+			
 			String contextID=OTUtility.getContext(dataID, authToken);
 			StreamingDataHandler downloadStream=OTUtility.downloadDoc(authToken,contextID);
 			
@@ -80,7 +87,7 @@ public class DocumentList extends HttpServlet {
 				System.out.println(name);
 				int parentID=Integer.valueOf(par);
 				int dataID=Integer.valueOf(parent);			 
-				OTUtility.copyDocument(parentID, dataID, name);
+				OTUtility.copyDocument(authToken,parentID, dataID, name);
 				PrintWriter os=response.getWriter();
 				os.write("<script type=text/javascript"+"> alert('completed')</script>");
 			}
@@ -98,7 +105,7 @@ public class DocumentList extends HttpServlet {
 				
 				int parentID=Integer.valueOf(par);
 				int dataID=Integer.valueOf(data);			 
-				String res=OTUtility.moveDocument(dataID,parentID);
+				String res=OTUtility.moveDocument(authToken,dataID,parentID);
 				if(res!=null&&res.equals("Moved")){
 					PrintWriter os=response.getWriter();
 					os.write("<script type=text/javascript"+"> alert('completed')</script>");
@@ -118,7 +125,7 @@ public class DocumentList extends HttpServlet {
 				
 				//int parentID=Integer.valueOf(par);
 				int dataID=Integer.valueOf(data);			 
-				String res=OTUtility.deleteDocument(dataID);
+				String res=OTUtility.deleteDocument(authToken,dataID);
 				if(res!=null&&res.equals("deleted")){
 					PrintWriter os=response.getWriter();
 					os.write("<script type=text/javascript"+">window.close()</script>");
@@ -128,6 +135,18 @@ public class DocumentList extends HttpServlet {
 		
 		if(action.equals("Exclude"))
 		{
+			String categoryID=prop.getProperty("UDS.CategoryTemplateID");
+			
+			System.out.println("Category ID: "+categoryID);
+			int categoryTemplateID = 0;
+			if(categoryID!=null && !categoryID.equals(""))
+			{
+				categoryTemplateID=Integer.valueOf(categoryID);
+			}
+			else
+			{
+				LOGGER.error("Category Template ID is missing or not valid");
+			}
 			//System.out.println("in post");
 			//String par=request.getParameter("parentID");
 			String dataArray=request.getParameter("dataID");
@@ -140,7 +159,7 @@ public class DocumentList extends HttpServlet {
 					if(s!=null&&!s.equals(""))
 					{
 						int dataid=Integer.valueOf(s);
-						OTUtility.updateCategory(dataid);
+						OTUtility.updateCategory(authToken,dataid,categoryTemplateID);
 						PrintWriter os=response.getWriter();
 						os.write("<script type=text/javascript"+">window.close()</script>");
 					}
