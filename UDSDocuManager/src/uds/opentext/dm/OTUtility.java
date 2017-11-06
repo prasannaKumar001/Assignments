@@ -8,6 +8,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -155,15 +156,24 @@ public class OTUtility {
 		return docManClient;
 	}
 	
-	public static String getContext(int dataID,String authToken)
+	public static Map<String,String> getContext(int dataID,String authToken)
 	{
 		DocumentManagement docManClient=null;
+		Map<String,String> docContext=new HashMap<String,String>();
 		String contextID=null;
+		String docuName=null;
 			docManClient=OTUtility.getDocumentManagement(authToken);
 			System.out.print("Generating context ID...");
 			contextID = docManClient.getVersionContentsContext(dataID, 0);
+			docuName = docManClient.getNode(dataID).getName();
+			System.out.println("Document Name: "+docManClient.getNode(dataID).getName());
 			System.out.println("Generated Context ID : "+contextID);
-		return contextID;
+			if(contextID!=null && docuName!=null)
+			{
+				docContext.put("contextID", contextID);
+				docContext.put("docuName", docuName);
+			}
+		return docContext;
 	}
 	
 	public static ContentService getContentService(String authToken,String contextID)
@@ -234,11 +244,11 @@ public class OTUtility {
 		try 
 		{
 			contentServiceClient=OTUtility.getContentService(authToken, contextID);
-			System.out.println("Downloading file...");
+			//System.out.println("Downloading file...");
 			downloadStream = (StreamingDataHandler) contentServiceClient.downloadContent(contextID);
 			String contenttype=downloadStream.getContentType();
 			String fileName=downloadStream.getName();
-			System.out.println(contenttype+"::::"+fileName);
+			//System.out.println(contenttype+"::::"+fileName);
 			//File file = new File(FILE_PATH);
 			//downloadStream.moveTo(file);
 			//System.out.println(contenttype +" ............"+ fileName);
@@ -311,7 +321,7 @@ public class OTUtility {
 			
 			System.out.print("Generating context ID...");
 			contextID = docManClient.createDocumentContext(PARENT_ID, file.getName(), null, false, null);
-			System.out.println("SUCCESS!\n");
+			//System.out.println("SUCCESS!\n");
 			
 			contentService = new ContentService_Service();
 			contentServiceClient = contentService.getBasicHttpBindingContentService(new MTOMFeature());
@@ -370,10 +380,10 @@ public class OTUtility {
 
 			((WSBindingProvider) contentServiceClient).setOutboundHeaders(headers);
 			
-			System.out.print("Uploading document...");
+			//System.out.print("Uploading document...");
 			String objectID = contentServiceClient.uploadContent(new DataHandler(new FileDataSource(file)));
-			System.out.println("SUCCESS!\n");
-			System.out.println("New document uploaded with ID = " + objectID);
+			//System.out.println("SUCCESS!\n");
+			//System.out.println("New document uploaded with ID = " + objectID);
 			
 			int dataid=Integer.valueOf(objectID);
 			OTUtility.addCategory(authtoken,dataid,categoryTemplateID);
@@ -414,8 +424,8 @@ public class OTUtility {
 		
 		try
 		{
-			System.out.println("dataid "+dataID);
-			System.out.println("parentID "+parentID);
+			//System.out.println("dataid "+dataID);
+			//System.out.println("parentID "+parentID);
 			//authToken=OTUtility.getAuthToken();
 
 			docManClient=OTUtility.getDocumentManagement(authToken);
@@ -495,7 +505,7 @@ public class OTUtility {
 			 */			
 
 			
-			System.out.println("updated");
+			//System.out.println("updated");
 		}
 		catch (Exception e) {
 			// TODO: handle exception
@@ -687,7 +697,7 @@ public class OTUtility {
 				    				for(String s:dataValues)
 				    				{	
 				    					retVal.put(data.getDescription(), s);
-				    					System.out.println(s);
+				    					//System.out.println(s);
 				    				}
 					    			//str.getValues().add(true);
 				    				//System.out.println("String");
@@ -711,7 +721,7 @@ public class OTUtility {
 				    					    } 
 				    					    catch (Exception e)
 				    					    {}
-				    					System.out.println();
+				    					//System.out.println();
 				    				}
 				    				//System.out.println("Date");
 				    			}
@@ -723,7 +733,7 @@ public class OTUtility {
 				    				for(Boolean b:booleanValue)
 				    				{	
 				    					retVal.put(data.getDescription(), b.toString());
-				    					System.out.println(b.toString());
+				    					//System.out.println(b.toString());
 				    				}
 				    			}
 				    			if(dataType.endsWith("IntegerValue"))
@@ -736,7 +746,7 @@ public class OTUtility {
 				    				}
 				    			}
 								//System.out.println("value: "+atg.getValues().get(i));
-								System.out.println(data.getDescription());
+								//System.out.println(data.getDescription());
 								//System.out.println(data.getKey());
 								//System.out.println();
 								i++;

@@ -1,10 +1,13 @@
 package uds.opentext.dm;
 
+import java.awt.Desktop;
 import java.io.ByteArrayOutputStream;
-
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.servlet.ServletException;
@@ -43,36 +46,82 @@ public class DocumentList extends HttpServlet {
 		
 		String authToken=OTUtility.getAuthToken(USERNAME, PASSWORD);
 		
+		Map<String,String> docContext=new HashMap<String,String>();
 		String param=request.getParameter("dataID");
 		String action=request.getParameter("action");
 		if(action.equals("download") || action.equals("Display"))
 		{
+			
 			int dataID=Integer.valueOf(param);
-			
-			String contextID=OTUtility.getContext(dataID, authToken);
-			StreamingDataHandler downloadStream=OTUtility.downloadDoc(authToken,contextID);
-			
-			byte[] bytes = null;
-		    ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		    downloadStream.writeTo(bos);
-		    bos.flush();
-		    bos.close();
-		    bytes = bos.toByteArray();
-		    response.setContentType("application/pdf");  
+			if(action.equals("download"))
+			{
+				System.out.println("in download");
+				docContext=OTUtility.getContext(dataID, authToken);
+				StreamingDataHandler downloadStream=OTUtility.downloadDoc(authToken,docContext.get("contextID"));
+				String docuName=docContext.get("docuName");
+				byte[] bytes = null;
+				ByteArrayOutputStream bos = new ByteArrayOutputStream();
+				downloadStream.writeTo(bos);
+				bos.flush();
+				bos.close();
+				bytes = bos.toByteArray();
+				response.setContentType(downloadStream.getContentType());
+		    	response.setHeader("Content-Disposition","attachment; filename=\"" +docuName); 
+		    	OutputStream outputstream=response.getOutputStream();
+				outputstream.write(bytes);
+				outputstream.close();
+			}
+		      
 		  
 		    if(action.equals("Display"))
 		    {
-		    	response.setHeader("Content-Disposition","inline; filename=\"" + dataID+".pdf" + "\"");   
+		    	System.out.println("in display");
+		    	docContext=OTUtility.getContext(dataID, authToken);
+				StreamingDataHandler downloadStream=OTUtility.downloadDoc(authToken,docContext.get("contextID"));
+				String docuName=docContext.get("docuName");
+				byte[] bytes = null;
+				ByteArrayOutputStream bos = new ByteArrayOutputStream();
+				downloadStream.writeTo(bos);
+				bos.flush();
+				bos.close();
+				bytes = bos.toByteArray();
+		    	if(docuName.endsWith(".pdf"))
+		    	{
+		    		System.out.println("in pdf");
+			    	//System.out.println(downloadStream.getContentType());
+			    	response.setContentType("application/pdf");
+			    	response.setHeader("Content-Disposition","inline; filename=\"" +docuName);
+			    	OutputStream outputstream=response.getOutputStream();
+				    outputstream.write(bytes);
+				    outputstream.close();	    
+		    	}
+		    	
+		    	else
+		    	{
+		    		//response.setContentType(downloadStream.getContentType());
+		    		//response.setHeader("Content-Disposition","attachment; filename=\"" + docuName);
+		    		String FILE_PATH=System.getProperty("java.io.tmpdir");
+		    		File file = new File(FILE_PATH+"/"+docuName);
+		    		//System.out.println(file.getAbsolutePath());
+					downloadStream.moveTo(file);
+					System.out.println("others");
+					//System.out.println(contenttype +" ............"+ fileName);
+					//System.out.println("Downloaded " + file.length() + " bytes to " + FILE_PATH + ".\n");
+		    		try {
+		    			
+		    		if (Desktop.isDesktopSupported()) {
+				    	 
+				    	 
+				       Desktop.getDesktop().open(file);
+				       ;
+				     }
+				   } catch (IOException ioe) {
+				     ioe.printStackTrace();
+				  }
+
+		    	}
 		    }
-		    else
-		    {
-		    	response.setHeader("Content-Disposition","attachment; filename=\"" + dataID+".pdf" + "\""); 
-		    }
-		  
-		    OutputStream outputstream=response.getOutputStream();
-		    outputstream.write(bytes);
-		    outputstream.close();
-		   
+		    
 		}
 		
 		if(action.equals("Copy"))
