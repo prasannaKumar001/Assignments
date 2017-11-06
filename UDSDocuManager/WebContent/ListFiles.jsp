@@ -1,4 +1,7 @@
 
+<%@page import="java.util.Map"%>
+<%@page import="java.util.Date"%>
+<%@page import="java.util.Properties"%>
 <%@page import="org.apache.log4j.Logger"%>
 <%@page import="com.opentext.livelink.service.docman.Node"%>
 <%@page import="uds.opentext.dm.OTUtility"%>
@@ -81,52 +84,69 @@
 			<img alt="" src="headerbar_content_server.png">
 		</h1>
 	</div>
-	
-	
+	<%
+				Properties prop = new Properties();
+				prop.load(getServletContext().getResourceAsStream("/WEB-INF/config.properties"));
+				String USERNAME=prop.getProperty("UDS.USERNAME");
+				String PASSWORD=prop.getProperty("UDS.PASSWORD");
+				
+				
+				System.out.print("USERNAME: "+USERNAME);
+				
+				String parentID=request.getParameter("parentID");
+			
+				//need to write logic to get parent id from DB
+				String authToken=OTUtility.getAuthToken(USERNAME, PASSWORD);
+				Map<String,String> retVal=OTUtility.getNode(authToken, 85457);
+				String RequestNumber=retVal.get("RequestNumber");
+				String RequestDate=retVal.get("RequestDate");
+				String SubscriberName=retVal.get("SubscriberName");
+				String RequestType=retVal.get("RequestType");
+				String BranchName=retVal.get("BranchName");
+				String  RequestStatus=retVal.get("RequestStatus");
+				List<Node> nodes=OTUtility.getChildren(authToken,85457);//parent ID
+				List<Node> nodes2=OTUtility.excludedNodes(authToken,85457);
+				
+				
+			%>	
+			
+			
+
 	<div style="min-height: 117px; ">
 		<table  width="100%" border="0" class="level1table"  align="Right">
 			<tbody >
 				<tr>
-					<td align="right" class="lavel1td browseRow2"></td>
-					<td align="left" class="lavel1td browseRow2">Request Type</td>
-					<td align="right" class="lavel1td browseRow2"></td>
-					<td align="left" class="lavel1td browseRow2">ID</td>
+					<td align="right" class="lavel1td browseRow2"><%= RequestType%></td>
+					<td align="right" class="lavel1td browseRow2">Request Type</td>
+					<td align="right" class="lavel1td browseRow2"><%= RequestNumber%></td>
+					<td align="right" class="lavel1td browseRow2">Request ID</td>
 					
 				</tr>
 				<tr>
-					<td align="right" class="lavel1td browseRow2"></td>
-					<td align="left" class="lavel1td browseRow2">Office</td>
-					<td align="right" class="lavel1td browseRow2"></td>
-					<td align="left" class="lavel1td browseRow2">Date</td>
+					<td align="right" class="lavel1td browseRow2"><%= BranchName%></td>
+					<td align="right" class="lavel1td browseRow2">Office</td>
+					<td align="right" class="lavel1td browseRow2"><%= RequestDate %></td>
+					<td align="right" class="lavel1td browseRow2">Creation Date</td>
 					
 				</tr>
 				<tr>
-					<td align="right" class="lavel1td browseRow2"></td>
-					<td align="left" class="lavel1td browseRow2">Req Status</td>
-					<td align="right" class="lavel1td browseRow2"></td>
-					<td align="left" class="lavel1td browseRow2">Customer Name</td>	
+					<td align="right" class="lavel1td browseRow2"><%= RequestStatus %></td>
+					<td align="right" class="lavel1td browseRow2">Req Status</td>
+					<td align="right" class="lavel1td browseRow2"><%=SubscriberName %></td>
+					<td align="right" class="lavel1td browseRow2">Customer Name</td>	
 				</tr>
 				<tr>
 					<td></td>
 					<td></td>
 					<td align="right" class="lavel1td browseRow2"></td>	
-					<td align="left" class="lavel1td browseRow2">Customer ID</td>
+					<td align="right" class="lavel1td browseRow2">Customer ID</td>
 				</tr>
 			</tbody>
 		</table>
 	</div>
 		<div style="margin-top:-10 px;">
 	
-			<%
-				String parentID=request.getParameter("parentID");
 			
-				//need to write logic to get parent id from DB
-				
-				List<Node> nodes=OTUtility.getChildren(85457);//parent ID
-				List<Node> nodes2=OTUtility.excludedNodes(85457);
-				
-				
-			%>	
 			<c:set var="n" value="<%=nodes%>"/>
 			<c:set var="k" value="<%=nodes2%>"/>
 			<div id="tabs"  >
@@ -140,13 +160,11 @@
 						  	<option value="Scan">Scan</option>
 						  	<option id="Display">Display</option>
 						  	<option id="Upload">Upload</option>
-						  	<option id="Export">Export </option>
 						  	<option id="Copy">Copy</option>
 						  	<option id="Move">Move</option>
-						  	<option value="Rename">Rename</option>
 						  	<option id="Exclude">Exclude</option>
 						  	<option value="Retrieve">Retrieve</option>
-						 	 <option id="Delete">Delete</option>
+						 	<!--<option id="Delete">Delete</option>-->
 						  	<option value="Send">Send</option>
 						</select>
   					</div>
@@ -231,7 +249,7 @@
 		</div>	
 		</div>
  			<p class="copyright">
-				OpenText Content Server version 16. Copyright © 1995 - 2016 Open Text. All Rights Reserved.
+				OpenText Content Server version 16. Copyright © 1995 - 2017 Open Text. All Rights Reserved.
 			</p>
 </body>
 </html>

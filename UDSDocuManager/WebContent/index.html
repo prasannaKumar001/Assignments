@@ -15,9 +15,21 @@
 	w.focus();
 	}
 	}
+	
+	function doOpenWR(  )
+	{
+		
+	var		w = window.open('http://c-rhq-ecmdev.sec.se.com.sa/otcs/livelink.exe?func=otdsintegration.redirect&OTDSTicket=*OTDSSSO*AVBBUUFVLVNMZXU3XzBQdVVOWEFlUTc3TDRKUVJRekQ4QUVLSUVuZ3hVc1JHdWNpVmtreEc0NTlnQTBMQmJMRXlPVGxMbWl5aTEwZ1lpc0loWmlOdmNIV1EwVVJacTRTVktMZTFPUHBDZ29MWnlPQ3FBcWh3M1RNaU1NMk1FYWtfeXdmbzJtUDR4bDk2RGtIUExNSHoxeUtwczZ6YlZwOFkzQ08yZjlaMzBrV0NhS3BxZ3BldklUYmR3b25tUmE1QnZMS0pObEZ5QVk3V3hlTHBTY3dyZm1Jay1WU2RKOXpibXA3eS12MUxQNy1naWtfcG9KR21sRzBSRkZsRnlCaGNNdW1QTFJoVEtsV00yQ3R4RDh3dTZuMndCNDZicmVPUVF6UkQyUTBkeVlZM2g0TElqWmV6M1NQckEzdlVIeWJLYnpNUGhRRXcybWFocXdHUSoATgBKABREuRLw6wWEOtck8gk_6tGlMbYkZwAQd_IDAAfHbyNg88opYo7tOgAgGxnZzy9UjoFCAlzDMMRH_saa_NS_oUdMVcTkRfGJ0_wAAA**&NextURL=/otcs/livelink.exe?func=ll%26objId=85245%26objAction=RunReport','doOpenDocuments','directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=no,width=1600,height=420');
+
+	if ( w.focus )
+	{
+	w.focus();
+	}
+	}
 	</script>
 </head>
 <body>
-	<a href="#" onclick="doOpenDocuments()">List All Documents</a>
+	<a href="#" onclick="doOpenDocuments()">List All Documents</a><br>
+	<a href="#" onclick="doOpenWR()">Web Report</a>
 </body>
 </html>

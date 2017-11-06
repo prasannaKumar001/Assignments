@@ -168,7 +168,7 @@ function downloadAllFiles()
 			inputElements=null;
 		}
 	}
-	if((document.getElementById("Export").selected))
+/*	if((document.getElementById("Export").selected))
 	{
 		var checkedValue = null; 
 		var inputElements = document.getElementsByName('foo');
@@ -183,7 +183,7 @@ function downloadAllFiles()
 		      }
 		}
 		
-	}
+	}*/
 	if((document.getElementById("Copy").selected))
 	{
 		var chk=0;
@@ -233,7 +233,7 @@ function downloadAllFiles()
 		  }
 		if(chk>1)
 		{
-			alert("Multiple Documents can not be Copied");
+			alert("Multiple Documents can not be Moved");
 		}
 		if(chk==0)
 		{
@@ -253,7 +253,7 @@ function downloadAllFiles()
 		inputElements=null;
 		}
 	}
-	if((document.getElementById("Delete").selected))
+	/*if((document.getElementById("Delete").selected))
 	{
 		var chk=0;
 		var checkedValue = null; 
@@ -267,7 +267,7 @@ function downloadAllFiles()
 		  }
 		if(chk>1)
 		{
-			alert("Multiple Documents can not be Copied");
+			alert("Multiple Documents can not be deleted");
 		}
 		if(chk==0)
 		{
@@ -287,7 +287,7 @@ function downloadAllFiles()
 		inputElements=null;
 		}
 	}
-	
+	*/
 	if((document.getElementById("Upload").selected))
 	{
 		var	w = window.open('http://localhost:8080/UDSDocuManager/upload.jsp','upload','directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=no,width=500,height=300');
