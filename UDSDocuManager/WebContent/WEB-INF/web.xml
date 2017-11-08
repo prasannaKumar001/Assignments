@@ -8,7 +8,7 @@
     <description>DocumentList</description>
     <display-name>DocumentList</display-name>
     <servlet-name>DocumentList</servlet-name>
-    <servlet-class>uds.opentext.dm.DocumentList</servlet-class> 
+    <servlet-class>uds.opentext.dm.DocumentList</servlet-class>
   </servlet>
   <servlet>
     <description></description>
@@ -20,15 +20,25 @@
     <servlet-name>UploadServlet</servlet-name>
     <url-pattern>/UploadServlet</url-pattern>
   </servlet-mapping>
-   <context-param>
-        <param-name>log4j-config-location</param-name>
-        <param-value>WEB-INF/log4j.properties</param-value>
-    </context-param>
-    <listener>
+  <context-param>
+    <param-name>log4j-config-location</param-name>
+    <param-value>WEB-INF/log4j.properties</param-value>
+  </context-param>
+  <listener>
     <listener-class>uds.opentext.dm.ContextListener</listener-class>
-	</listener>
+  </listener>
   <servlet-mapping>
     <servlet-name>DocumentList</servlet-name>
     <url-pattern>/DocumentList</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>ScanUpload</display-name>
+    <servlet-name>ScanUpload</servlet-name>
+    <servlet-class>uds.opentext.dm.ScanUpload</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ScanUpload</servlet-name>
+    <url-pattern>/ScanUpload</url-pattern>
   </servlet-mapping>
 </web-app>
