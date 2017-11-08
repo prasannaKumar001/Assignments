@@ -22,10 +22,13 @@ import javax.xml.datatype.XMLGregorianCalendar;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
  *       &lt;sequence&gt;
  *         &lt;element name="Branch" type="{http://www.w3.org/2001/XMLSchema}short" minOccurs="0"/&gt;
+ *         &lt;element name="City" type="{http://www.w3.org/2001/XMLSchema}short" minOccurs="0"/&gt;
  *         &lt;element name="Custid" type="{http://www.w3.org/2001/XMLSchema}long" minOccurs="0"/&gt;
  *         &lt;element name="Custtype" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/&gt;
  *         &lt;element name="Locid" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/&gt;
  *         &lt;element name="Mobile" type="{http://www.w3.org/2001/XMLSchema}long" minOccurs="0"/&gt;
+ *         &lt;element name="Pobox" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
+ *         &lt;element name="Postcode" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/&gt;
  *         &lt;element name="ReqDate" type="{http://www.w3.org/2001/XMLSchema}dateTime" minOccurs="0"/&gt;
  *         &lt;element name="Reqid" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/&gt;
  *         &lt;element name="invname" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
@@ -40,10 +43,13 @@ import javax.xml.datatype.XMLGregorianCalendar;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "RequestData", propOrder = {
     "branch",
+    "city",
     "custid",
     "custtype",
     "locid",
     "mobile",
+    "pobox",
+    "postcode",
     "reqDate",
     "reqid",
     "invname"
@@ -52,6 +58,8 @@ public class RequestData {
 
     @XmlElement(name = "Branch")
     protected Short branch;
+    @XmlElement(name = "City")
+    protected Short city;
     @XmlElement(name = "Custid")
     protected Long custid;
     @XmlElement(name = "Custtype")
@@ -60,6 +68,10 @@ public class RequestData {
     protected Integer locid;
     @XmlElement(name = "Mobile")
     protected Long mobile;
+    @XmlElementRef(name = "Pobox", namespace = "http://schemas.datacontract.org/2004/07/", type = JAXBElement.class, required = false)
+    protected JAXBElement<String> pobox;
+    @XmlElement(name = "Postcode")
+    protected Integer postcode;
     @XmlElement(name = "ReqDate")
     @XmlSchemaType(name = "dateTime")
     protected XMLGregorianCalendar reqDate;
@@ -90,6 +102,30 @@ public class RequestData {
      */
     public void setBranch(Short value) {
         this.branch = value;
+    }
+
+    /**
+     * Gets the value of the city property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Short }
+     *     
+     */
+    public Short getCity() {
+        return city;
+    }
+
+    /**
+     * Sets the value of the city property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Short }
+     *     
+     */
+    public void setCity(Short value) {
+        this.city = value;
     }
 
     /**
@@ -186,6 +222,54 @@ public class RequestData {
      */
     public void setMobile(Long value) {
         this.mobile = value;
+    }
+
+    /**
+     * Gets the value of the pobox property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link JAXBElement }{@code <}{@link String }{@code >}
+     *     
+     */
+    public JAXBElement<String> getPobox() {
+        return pobox;
+    }
+
+    /**
+     * Sets the value of the pobox property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link JAXBElement }{@code <}{@link String }{@code >}
+     *     
+     */
+    public void setPobox(JAXBElement<String> value) {
+        this.pobox = value;
+    }
+
+    /**
+     * Gets the value of the postcode property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Integer }
+     *     
+     */
+    public Integer getPostcode() {
+        return postcode;
+    }
+
+    /**
+     * Sets the value of the postcode property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Integer }
+     *     
+     */
+    public void setPostcode(Integer value) {
+        this.postcode = value;
     }
 
     /**
