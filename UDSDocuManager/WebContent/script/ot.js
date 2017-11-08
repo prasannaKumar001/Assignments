@@ -134,6 +134,22 @@ function Exclude(checkedValue,Exclude) //Exclude documents
 //All Dropdown Functionality
 function downloadAllFiles()
 {
+	if((document.getElementById("Scan").selected))
+	{
+		AcquireImage();
+		
+		var opt = {
+		        autoOpen: false,
+		        modal: true,
+		        width: 550,
+		        height:650,
+		        title: 'Details'
+		};
+
+		$("#dialog").dialog(opt).dialog("open");
+		//dialog();
+	}
+	
 	if((document.getElementById("Display").selected))
 	{
 		var chk=0;
@@ -375,5 +391,11 @@ $(document).ready(function() {
     } );
 } );
 	
-		
+//Dyno soft scanning code
+
+
+
+$( function dialog()  {
+    $( "#dialog" ).dialog("open");
+  } );
 		

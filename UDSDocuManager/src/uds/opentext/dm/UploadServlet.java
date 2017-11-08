@@ -94,7 +94,8 @@ public class UploadServlet extends HttpServlet {
 	                FileItem item = (FileItem) iter.next();
 	
 	                if (!item.isFormField()) {
-	                    String fileName = new File(item.getName()).getName();
+	                    String fileName = new File(item.getName()).getName();  
+	                    
 	                    filePath = uploadFolder + File.separator + fileName;
 	                    //System.out.println(fileName);
 	                    File uploadedFile = new File(filePath);
@@ -106,8 +107,8 @@ public class UploadServlet extends HttpServlet {
 	
 	            // displays done.jsp page after upload finished
 	            OTUtility.uploaddocument(authToken,filePath,85457,categoryTemplateID);
-	            getServletContext().getRequestDispatcher("/done.jsp").forward(
-	                    request, response);
+	            getServletContext().getRequestDispatcher("/done.jsp").forward(request, response);
+	            //response.
 	      
 	        } catch (FileUploadException ex) {
 	            throw new ServletException(ex);
