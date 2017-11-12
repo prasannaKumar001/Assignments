@@ -19,19 +19,22 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent&gt;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
  *       &lt;sequence&gt;
+ *         &lt;element name="BldPermDt" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
+ *         &lt;element name="BldPermno" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
  *         &lt;element name="Blockno" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
- *         &lt;element name="HAxis" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
+ *         &lt;element name="DeedDate" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
+ *         &lt;element name="DeedNo" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
+ *         &lt;element name="LocAddress" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
+ *         &lt;element name="LocCityId" type="{http://www.w3.org/2001/XMLSchema}short" minOccurs="0"/&gt;
+ *         &lt;element name="LocCityName" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
+ *         &lt;element name="LocDistId" type="{http://www.w3.org/2001/XMLSchema}short" minOccurs="0"/&gt;
+ *         &lt;element name="LocDistName" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
  *         &lt;element name="Locid" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/&gt;
  *         &lt;element name="Planno" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
  *         &lt;element name="Plotno" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
- *         &lt;element name="VAxis" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
- *         &lt;element name="bldpermno" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
- *         &lt;element name="cityid" type="{http://www.w3.org/2001/XMLSchema}short" minOccurs="0"/&gt;
- *         &lt;element name="cityname" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
- *         &lt;element name="distid" type="{http://www.w3.org/2001/XMLSchema}short" minOccurs="0"/&gt;
- *         &lt;element name="distname" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
- *         &lt;element name="placecode" type="{http://www.w3.org/2001/XMLSchema}short" minOccurs="0"/&gt;
- *         &lt;element name="usecode" type="{http://www.w3.org/2001/XMLSchema}short" minOccurs="0"/&gt;
+ *         &lt;element name="Usecode" type="{http://www.w3.org/2001/XMLSchema}short" minOccurs="0"/&gt;
+ *         &lt;element name="UsecodeName" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
+ *         &lt;element name="VoltId" type="{http://www.w3.org/2001/XMLSchema}short" minOccurs="0"/&gt;
  *       &lt;/sequence&gt;
  *     &lt;/restriction&gt;
  *   &lt;/complexContent&gt;
@@ -42,44 +45,105 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "LocationData", propOrder = {
+    "bldPermDt",
+    "bldPermno",
     "blockno",
-    "hAxis",
+    "deedDate",
+    "deedNo",
+    "locAddress",
+    "locCityId",
+    "locCityName",
+    "locDistId",
+    "locDistName",
     "locid",
     "planno",
     "plotno",
-    "vAxis",
-    "bldpermno",
-    "cityid",
-    "cityname",
-    "distid",
-    "distname",
-    "placecode",
-    "usecode"
+    "usecode",
+    "usecodeName",
+    "voltId"
 })
 public class LocationData {
 
+    @XmlElementRef(name = "BldPermDt", namespace = "http://schemas.datacontract.org/2004/07/", type = JAXBElement.class, required = false)
+    protected JAXBElement<String> bldPermDt;
+    @XmlElementRef(name = "BldPermno", namespace = "http://schemas.datacontract.org/2004/07/", type = JAXBElement.class, required = false)
+    protected JAXBElement<String> bldPermno;
     @XmlElementRef(name = "Blockno", namespace = "http://schemas.datacontract.org/2004/07/", type = JAXBElement.class, required = false)
     protected JAXBElement<String> blockno;
-    @XmlElementRef(name = "HAxis", namespace = "http://schemas.datacontract.org/2004/07/", type = JAXBElement.class, required = false)
-    protected JAXBElement<String> hAxis;
+    @XmlElementRef(name = "DeedDate", namespace = "http://schemas.datacontract.org/2004/07/", type = JAXBElement.class, required = false)
+    protected JAXBElement<String> deedDate;
+    @XmlElementRef(name = "DeedNo", namespace = "http://schemas.datacontract.org/2004/07/", type = JAXBElement.class, required = false)
+    protected JAXBElement<String> deedNo;
+    @XmlElementRef(name = "LocAddress", namespace = "http://schemas.datacontract.org/2004/07/", type = JAXBElement.class, required = false)
+    protected JAXBElement<String> locAddress;
+    @XmlElement(name = "LocCityId")
+    protected Short locCityId;
+    @XmlElementRef(name = "LocCityName", namespace = "http://schemas.datacontract.org/2004/07/", type = JAXBElement.class, required = false)
+    protected JAXBElement<String> locCityName;
+    @XmlElement(name = "LocDistId")
+    protected Short locDistId;
+    @XmlElementRef(name = "LocDistName", namespace = "http://schemas.datacontract.org/2004/07/", type = JAXBElement.class, required = false)
+    protected JAXBElement<String> locDistName;
     @XmlElement(name = "Locid")
     protected Integer locid;
     @XmlElementRef(name = "Planno", namespace = "http://schemas.datacontract.org/2004/07/", type = JAXBElement.class, required = false)
     protected JAXBElement<String> planno;
     @XmlElementRef(name = "Plotno", namespace = "http://schemas.datacontract.org/2004/07/", type = JAXBElement.class, required = false)
     protected JAXBElement<String> plotno;
-    @XmlElementRef(name = "VAxis", namespace = "http://schemas.datacontract.org/2004/07/", type = JAXBElement.class, required = false)
-    protected JAXBElement<String> vAxis;
-    @XmlElementRef(name = "bldpermno", namespace = "http://schemas.datacontract.org/2004/07/", type = JAXBElement.class, required = false)
-    protected JAXBElement<String> bldpermno;
-    protected Short cityid;
-    @XmlElementRef(name = "cityname", namespace = "http://schemas.datacontract.org/2004/07/", type = JAXBElement.class, required = false)
-    protected JAXBElement<String> cityname;
-    protected Short distid;
-    @XmlElementRef(name = "distname", namespace = "http://schemas.datacontract.org/2004/07/", type = JAXBElement.class, required = false)
-    protected JAXBElement<String> distname;
-    protected Short placecode;
+    @XmlElement(name = "Usecode")
     protected Short usecode;
+    @XmlElementRef(name = "UsecodeName", namespace = "http://schemas.datacontract.org/2004/07/", type = JAXBElement.class, required = false)
+    protected JAXBElement<String> usecodeName;
+    @XmlElement(name = "VoltId")
+    protected Short voltId;
+
+    /**
+     * Gets the value of the bldPermDt property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link JAXBElement }{@code <}{@link String }{@code >}
+     *     
+     */
+    public JAXBElement<String> getBldPermDt() {
+        return bldPermDt;
+    }
+
+    /**
+     * Sets the value of the bldPermDt property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link JAXBElement }{@code <}{@link String }{@code >}
+     *     
+     */
+    public void setBldPermDt(JAXBElement<String> value) {
+        this.bldPermDt = value;
+    }
+
+    /**
+     * Gets the value of the bldPermno property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link JAXBElement }{@code <}{@link String }{@code >}
+     *     
+     */
+    public JAXBElement<String> getBldPermno() {
+        return bldPermno;
+    }
+
+    /**
+     * Sets the value of the bldPermno property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link JAXBElement }{@code <}{@link String }{@code >}
+     *     
+     */
+    public void setBldPermno(JAXBElement<String> value) {
+        this.bldPermno = value;
+    }
 
     /**
      * Gets the value of the blockno property.
@@ -106,27 +170,171 @@ public class LocationData {
     }
 
     /**
-     * Gets the value of the hAxis property.
+     * Gets the value of the deedDate property.
      * 
      * @return
      *     possible object is
      *     {@link JAXBElement }{@code <}{@link String }{@code >}
      *     
      */
-    public JAXBElement<String> getHAxis() {
-        return hAxis;
+    public JAXBElement<String> getDeedDate() {
+        return deedDate;
     }
 
     /**
-     * Sets the value of the hAxis property.
+     * Sets the value of the deedDate property.
      * 
      * @param value
      *     allowed object is
      *     {@link JAXBElement }{@code <}{@link String }{@code >}
      *     
      */
-    public void setHAxis(JAXBElement<String> value) {
-        this.hAxis = value;
+    public void setDeedDate(JAXBElement<String> value) {
+        this.deedDate = value;
+    }
+
+    /**
+     * Gets the value of the deedNo property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link JAXBElement }{@code <}{@link String }{@code >}
+     *     
+     */
+    public JAXBElement<String> getDeedNo() {
+        return deedNo;
+    }
+
+    /**
+     * Sets the value of the deedNo property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link JAXBElement }{@code <}{@link String }{@code >}
+     *     
+     */
+    public void setDeedNo(JAXBElement<String> value) {
+        this.deedNo = value;
+    }
+
+    /**
+     * Gets the value of the locAddress property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link JAXBElement }{@code <}{@link String }{@code >}
+     *     
+     */
+    public JAXBElement<String> getLocAddress() {
+        return locAddress;
+    }
+
+    /**
+     * Sets the value of the locAddress property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link JAXBElement }{@code <}{@link String }{@code >}
+     *     
+     */
+    public void setLocAddress(JAXBElement<String> value) {
+        this.locAddress = value;
+    }
+
+    /**
+     * Gets the value of the locCityId property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Short }
+     *     
+     */
+    public Short getLocCityId() {
+        return locCityId;
+    }
+
+    /**
+     * Sets the value of the locCityId property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Short }
+     *     
+     */
+    public void setLocCityId(Short value) {
+        this.locCityId = value;
+    }
+
+    /**
+     * Gets the value of the locCityName property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link JAXBElement }{@code <}{@link String }{@code >}
+     *     
+     */
+    public JAXBElement<String> getLocCityName() {
+        return locCityName;
+    }
+
+    /**
+     * Sets the value of the locCityName property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link JAXBElement }{@code <}{@link String }{@code >}
+     *     
+     */
+    public void setLocCityName(JAXBElement<String> value) {
+        this.locCityName = value;
+    }
+
+    /**
+     * Gets the value of the locDistId property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Short }
+     *     
+     */
+    public Short getLocDistId() {
+        return locDistId;
+    }
+
+    /**
+     * Sets the value of the locDistId property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Short }
+     *     
+     */
+    public void setLocDistId(Short value) {
+        this.locDistId = value;
+    }
+
+    /**
+     * Gets the value of the locDistName property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link JAXBElement }{@code <}{@link String }{@code >}
+     *     
+     */
+    public JAXBElement<String> getLocDistName() {
+        return locDistName;
+    }
+
+    /**
+     * Sets the value of the locDistName property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link JAXBElement }{@code <}{@link String }{@code >}
+     *     
+     */
+    public void setLocDistName(JAXBElement<String> value) {
+        this.locDistName = value;
     }
 
     /**
@@ -202,174 +410,6 @@ public class LocationData {
     }
 
     /**
-     * Gets the value of the vAxis property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link JAXBElement }{@code <}{@link String }{@code >}
-     *     
-     */
-    public JAXBElement<String> getVAxis() {
-        return vAxis;
-    }
-
-    /**
-     * Sets the value of the vAxis property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link JAXBElement }{@code <}{@link String }{@code >}
-     *     
-     */
-    public void setVAxis(JAXBElement<String> value) {
-        this.vAxis = value;
-    }
-
-    /**
-     * Gets the value of the bldpermno property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link JAXBElement }{@code <}{@link String }{@code >}
-     *     
-     */
-    public JAXBElement<String> getBldpermno() {
-        return bldpermno;
-    }
-
-    /**
-     * Sets the value of the bldpermno property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link JAXBElement }{@code <}{@link String }{@code >}
-     *     
-     */
-    public void setBldpermno(JAXBElement<String> value) {
-        this.bldpermno = value;
-    }
-
-    /**
-     * Gets the value of the cityid property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Short }
-     *     
-     */
-    public Short getCityid() {
-        return cityid;
-    }
-
-    /**
-     * Sets the value of the cityid property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Short }
-     *     
-     */
-    public void setCityid(Short value) {
-        this.cityid = value;
-    }
-
-    /**
-     * Gets the value of the cityname property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link JAXBElement }{@code <}{@link String }{@code >}
-     *     
-     */
-    public JAXBElement<String> getCityname() {
-        return cityname;
-    }
-
-    /**
-     * Sets the value of the cityname property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link JAXBElement }{@code <}{@link String }{@code >}
-     *     
-     */
-    public void setCityname(JAXBElement<String> value) {
-        this.cityname = value;
-    }
-
-    /**
-     * Gets the value of the distid property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Short }
-     *     
-     */
-    public Short getDistid() {
-        return distid;
-    }
-
-    /**
-     * Sets the value of the distid property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Short }
-     *     
-     */
-    public void setDistid(Short value) {
-        this.distid = value;
-    }
-
-    /**
-     * Gets the value of the distname property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link JAXBElement }{@code <}{@link String }{@code >}
-     *     
-     */
-    public JAXBElement<String> getDistname() {
-        return distname;
-    }
-
-    /**
-     * Sets the value of the distname property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link JAXBElement }{@code <}{@link String }{@code >}
-     *     
-     */
-    public void setDistname(JAXBElement<String> value) {
-        this.distname = value;
-    }
-
-    /**
-     * Gets the value of the placecode property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Short }
-     *     
-     */
-    public Short getPlacecode() {
-        return placecode;
-    }
-
-    /**
-     * Sets the value of the placecode property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Short }
-     *     
-     */
-    public void setPlacecode(Short value) {
-        this.placecode = value;
-    }
-
-    /**
      * Gets the value of the usecode property.
      * 
      * @return
@@ -391,6 +431,54 @@ public class LocationData {
      */
     public void setUsecode(Short value) {
         this.usecode = value;
+    }
+
+    /**
+     * Gets the value of the usecodeName property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link JAXBElement }{@code <}{@link String }{@code >}
+     *     
+     */
+    public JAXBElement<String> getUsecodeName() {
+        return usecodeName;
+    }
+
+    /**
+     * Sets the value of the usecodeName property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link JAXBElement }{@code <}{@link String }{@code >}
+     *     
+     */
+    public void setUsecodeName(JAXBElement<String> value) {
+        this.usecodeName = value;
+    }
+
+    /**
+     * Gets the value of the voltId property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Short }
+     *     
+     */
+    public Short getVoltId() {
+        return voltId;
+    }
+
+    /**
+     * Sets the value of the voltId property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Short }
+     *     
+     */
+    public void setVoltId(Short value) {
+        this.voltId = value;
     }
 
 }
