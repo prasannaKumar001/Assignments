@@ -1,6 +1,7 @@
 
 package org.datacontract.schemas._2004._07;
 
+import java.math.BigDecimal;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -22,15 +23,23 @@ import javax.xml.datatype.XMLGregorianCalendar;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
  *       &lt;sequence&gt;
  *         &lt;element name="Branch" type="{http://www.w3.org/2001/XMLSchema}short" minOccurs="0"/&gt;
- *         &lt;element name="City" type="{http://www.w3.org/2001/XMLSchema}short" minOccurs="0"/&gt;
+ *         &lt;element name="CityId" type="{http://www.w3.org/2001/XMLSchema}short" minOccurs="0"/&gt;
+ *         &lt;element name="CityName" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
  *         &lt;element name="Custid" type="{http://www.w3.org/2001/XMLSchema}long" minOccurs="0"/&gt;
  *         &lt;element name="Custtype" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/&gt;
+ *         &lt;element name="DistId" type="{http://www.w3.org/2001/XMLSchema}short" minOccurs="0"/&gt;
+ *         &lt;element name="DistName" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
+ *         &lt;element name="EngOffice" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
  *         &lt;element name="Locid" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/&gt;
  *         &lt;element name="Mobile" type="{http://www.w3.org/2001/XMLSchema}long" minOccurs="0"/&gt;
  *         &lt;element name="Pobox" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
  *         &lt;element name="Postcode" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/&gt;
  *         &lt;element name="ReqDate" type="{http://www.w3.org/2001/XMLSchema}dateTime" minOccurs="0"/&gt;
  *         &lt;element name="Reqid" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/&gt;
+ *         &lt;element name="TotalAmpere" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/&gt;
+ *         &lt;element name="TotalArea" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/&gt;
+ *         &lt;element name="TotalKVA" type="{http://www.w3.org/2001/XMLSchema}decimal" minOccurs="0"/&gt;
+ *         &lt;element name="VoltId" type="{http://www.w3.org/2001/XMLSchema}short" minOccurs="0"/&gt;
  *         &lt;element name="invname" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
  *       &lt;/sequence&gt;
  *     &lt;/restriction&gt;
@@ -43,27 +52,43 @@ import javax.xml.datatype.XMLGregorianCalendar;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "RequestData", propOrder = {
     "branch",
-    "city",
+    "cityId",
+    "cityName",
     "custid",
     "custtype",
+    "distId",
+    "distName",
+    "engOffice",
     "locid",
     "mobile",
     "pobox",
     "postcode",
     "reqDate",
     "reqid",
+    "totalAmpere",
+    "totalArea",
+    "totalKVA",
+    "voltId",
     "invname"
 })
 public class RequestData {
 
     @XmlElement(name = "Branch")
     protected Short branch;
-    @XmlElement(name = "City")
-    protected Short city;
+    @XmlElement(name = "CityId")
+    protected Short cityId;
+    @XmlElementRef(name = "CityName", namespace = "http://schemas.datacontract.org/2004/07/", type = JAXBElement.class, required = false)
+    protected JAXBElement<String> cityName;
     @XmlElement(name = "Custid")
     protected Long custid;
     @XmlElement(name = "Custtype")
     protected Integer custtype;
+    @XmlElement(name = "DistId")
+    protected Short distId;
+    @XmlElementRef(name = "DistName", namespace = "http://schemas.datacontract.org/2004/07/", type = JAXBElement.class, required = false)
+    protected JAXBElement<String> distName;
+    @XmlElementRef(name = "EngOffice", namespace = "http://schemas.datacontract.org/2004/07/", type = JAXBElement.class, required = false)
+    protected JAXBElement<String> engOffice;
     @XmlElement(name = "Locid")
     protected Integer locid;
     @XmlElement(name = "Mobile")
@@ -77,6 +102,14 @@ public class RequestData {
     protected XMLGregorianCalendar reqDate;
     @XmlElement(name = "Reqid")
     protected Integer reqid;
+    @XmlElement(name = "TotalAmpere")
+    protected Integer totalAmpere;
+    @XmlElement(name = "TotalArea")
+    protected Integer totalArea;
+    @XmlElement(name = "TotalKVA")
+    protected BigDecimal totalKVA;
+    @XmlElement(name = "VoltId")
+    protected Short voltId;
     @XmlElementRef(name = "invname", namespace = "http://schemas.datacontract.org/2004/07/", type = JAXBElement.class, required = false)
     protected JAXBElement<String> invname;
 
@@ -105,27 +138,51 @@ public class RequestData {
     }
 
     /**
-     * Gets the value of the city property.
+     * Gets the value of the cityId property.
      * 
      * @return
      *     possible object is
      *     {@link Short }
      *     
      */
-    public Short getCity() {
-        return city;
+    public Short getCityId() {
+        return cityId;
     }
 
     /**
-     * Sets the value of the city property.
+     * Sets the value of the cityId property.
      * 
      * @param value
      *     allowed object is
      *     {@link Short }
      *     
      */
-    public void setCity(Short value) {
-        this.city = value;
+    public void setCityId(Short value) {
+        this.cityId = value;
+    }
+
+    /**
+     * Gets the value of the cityName property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link JAXBElement }{@code <}{@link String }{@code >}
+     *     
+     */
+    public JAXBElement<String> getCityName() {
+        return cityName;
+    }
+
+    /**
+     * Sets the value of the cityName property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link JAXBElement }{@code <}{@link String }{@code >}
+     *     
+     */
+    public void setCityName(JAXBElement<String> value) {
+        this.cityName = value;
     }
 
     /**
@@ -174,6 +231,78 @@ public class RequestData {
      */
     public void setCusttype(Integer value) {
         this.custtype = value;
+    }
+
+    /**
+     * Gets the value of the distId property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Short }
+     *     
+     */
+    public Short getDistId() {
+        return distId;
+    }
+
+    /**
+     * Sets the value of the distId property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Short }
+     *     
+     */
+    public void setDistId(Short value) {
+        this.distId = value;
+    }
+
+    /**
+     * Gets the value of the distName property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link JAXBElement }{@code <}{@link String }{@code >}
+     *     
+     */
+    public JAXBElement<String> getDistName() {
+        return distName;
+    }
+
+    /**
+     * Sets the value of the distName property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link JAXBElement }{@code <}{@link String }{@code >}
+     *     
+     */
+    public void setDistName(JAXBElement<String> value) {
+        this.distName = value;
+    }
+
+    /**
+     * Gets the value of the engOffice property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link JAXBElement }{@code <}{@link String }{@code >}
+     *     
+     */
+    public JAXBElement<String> getEngOffice() {
+        return engOffice;
+    }
+
+    /**
+     * Sets the value of the engOffice property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link JAXBElement }{@code <}{@link String }{@code >}
+     *     
+     */
+    public void setEngOffice(JAXBElement<String> value) {
+        this.engOffice = value;
     }
 
     /**
@@ -318,6 +447,102 @@ public class RequestData {
      */
     public void setReqid(Integer value) {
         this.reqid = value;
+    }
+
+    /**
+     * Gets the value of the totalAmpere property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Integer }
+     *     
+     */
+    public Integer getTotalAmpere() {
+        return totalAmpere;
+    }
+
+    /**
+     * Sets the value of the totalAmpere property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Integer }
+     *     
+     */
+    public void setTotalAmpere(Integer value) {
+        this.totalAmpere = value;
+    }
+
+    /**
+     * Gets the value of the totalArea property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Integer }
+     *     
+     */
+    public Integer getTotalArea() {
+        return totalArea;
+    }
+
+    /**
+     * Sets the value of the totalArea property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Integer }
+     *     
+     */
+    public void setTotalArea(Integer value) {
+        this.totalArea = value;
+    }
+
+    /**
+     * Gets the value of the totalKVA property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link BigDecimal }
+     *     
+     */
+    public BigDecimal getTotalKVA() {
+        return totalKVA;
+    }
+
+    /**
+     * Sets the value of the totalKVA property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link BigDecimal }
+     *     
+     */
+    public void setTotalKVA(BigDecimal value) {
+        this.totalKVA = value;
+    }
+
+    /**
+     * Gets the value of the voltId property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Short }
+     *     
+     */
+    public Short getVoltId() {
+        return voltId;
+    }
+
+    /**
+     * Sets the value of the voltId property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Short }
+     *     
+     */
+    public void setVoltId(Short value) {
+        this.voltId = value;
     }
 
     /**

@@ -1,9 +1,12 @@
 
 package org.datacontract.schemas._2004._07;
 
+import java.math.BigDecimal;
+import javax.xml.bind.JAXBElement;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -17,13 +20,14 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent&gt;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType"&gt;
  *       &lt;sequence&gt;
- *         &lt;element name="Reqtype" type="{http://www.w3.org/2001/XMLSchema}short" minOccurs="0"/&gt;
- *         &lt;element name="captype" type="{http://www.w3.org/2001/XMLSchema}short" minOccurs="0"/&gt;
- *         &lt;element name="capunit" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/&gt;
- *         &lt;element name="seq" type="{http://www.w3.org/2001/XMLSchema}short" minOccurs="0"/&gt;
- *         &lt;element name="unitarea" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/&gt;
- *         &lt;element name="unitcount" type="{http://www.w3.org/2001/XMLSchema}short" minOccurs="0"/&gt;
- *         &lt;element name="unittype" type="{http://www.w3.org/2001/XMLSchema}short" minOccurs="0"/&gt;
+ *         &lt;element name="CapAmpere" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/&gt;
+ *         &lt;element name="CapKVA" type="{http://www.w3.org/2001/XMLSchema}decimal" minOccurs="0"/&gt;
+ *         &lt;element name="CapType" type="{http://www.w3.org/2001/XMLSchema}short" minOccurs="0"/&gt;
+ *         &lt;element name="Capacity" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/&gt;
+ *         &lt;element name="UnitCount" type="{http://www.w3.org/2001/XMLSchema}short" minOccurs="0"/&gt;
+ *         &lt;element name="UnitType" type="{http://www.w3.org/2001/XMLSchema}short" minOccurs="0"/&gt;
+ *         &lt;element name="UnitTypeName" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
+ *         &lt;element name="Unitarea" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/&gt;
  *       &lt;/sequence&gt;
  *     &lt;/restriction&gt;
  *   &lt;/complexContent&gt;
@@ -34,119 +38,200 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ReqDetailNew", propOrder = {
-    "reqtype",
-    "captype",
-    "capunit",
-    "seq",
-    "unitarea",
-    "unitcount",
-    "unittype"
+    "capAmpere",
+    "capKVA",
+    "capType",
+    "capacity",
+    "unitCount",
+    "unitType",
+    "unitTypeName",
+    "unitarea"
 })
 public class ReqDetailNew {
 
-    @XmlElement(name = "Reqtype")
-    protected Short reqtype;
-    protected Short captype;
-    protected Integer capunit;
-    protected Short seq;
+    @XmlElement(name = "CapAmpere")
+    protected Integer capAmpere;
+    @XmlElement(name = "CapKVA")
+    protected BigDecimal capKVA;
+    @XmlElement(name = "CapType")
+    protected Short capType;
+    @XmlElement(name = "Capacity")
+    protected Integer capacity;
+    @XmlElement(name = "UnitCount")
+    protected Short unitCount;
+    @XmlElement(name = "UnitType")
+    protected Short unitType;
+    @XmlElementRef(name = "UnitTypeName", namespace = "http://schemas.datacontract.org/2004/07/", type = JAXBElement.class, required = false)
+    protected JAXBElement<String> unitTypeName;
+    @XmlElement(name = "Unitarea")
     protected Integer unitarea;
-    protected Short unitcount;
-    protected Short unittype;
 
     /**
-     * Gets the value of the reqtype property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Short }
-     *     
-     */
-    public Short getReqtype() {
-        return reqtype;
-    }
-
-    /**
-     * Sets the value of the reqtype property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Short }
-     *     
-     */
-    public void setReqtype(Short value) {
-        this.reqtype = value;
-    }
-
-    /**
-     * Gets the value of the captype property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Short }
-     *     
-     */
-    public Short getCaptype() {
-        return captype;
-    }
-
-    /**
-     * Sets the value of the captype property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Short }
-     *     
-     */
-    public void setCaptype(Short value) {
-        this.captype = value;
-    }
-
-    /**
-     * Gets the value of the capunit property.
+     * Gets the value of the capAmpere property.
      * 
      * @return
      *     possible object is
      *     {@link Integer }
      *     
      */
-    public Integer getCapunit() {
-        return capunit;
+    public Integer getCapAmpere() {
+        return capAmpere;
     }
 
     /**
-     * Sets the value of the capunit property.
+     * Sets the value of the capAmpere property.
      * 
      * @param value
      *     allowed object is
      *     {@link Integer }
      *     
      */
-    public void setCapunit(Integer value) {
-        this.capunit = value;
+    public void setCapAmpere(Integer value) {
+        this.capAmpere = value;
     }
 
     /**
-     * Gets the value of the seq property.
+     * Gets the value of the capKVA property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link BigDecimal }
+     *     
+     */
+    public BigDecimal getCapKVA() {
+        return capKVA;
+    }
+
+    /**
+     * Sets the value of the capKVA property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link BigDecimal }
+     *     
+     */
+    public void setCapKVA(BigDecimal value) {
+        this.capKVA = value;
+    }
+
+    /**
+     * Gets the value of the capType property.
      * 
      * @return
      *     possible object is
      *     {@link Short }
      *     
      */
-    public Short getSeq() {
-        return seq;
+    public Short getCapType() {
+        return capType;
     }
 
     /**
-     * Sets the value of the seq property.
+     * Sets the value of the capType property.
      * 
      * @param value
      *     allowed object is
      *     {@link Short }
      *     
      */
-    public void setSeq(Short value) {
-        this.seq = value;
+    public void setCapType(Short value) {
+        this.capType = value;
+    }
+
+    /**
+     * Gets the value of the capacity property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Integer }
+     *     
+     */
+    public Integer getCapacity() {
+        return capacity;
+    }
+
+    /**
+     * Sets the value of the capacity property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Integer }
+     *     
+     */
+    public void setCapacity(Integer value) {
+        this.capacity = value;
+    }
+
+    /**
+     * Gets the value of the unitCount property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Short }
+     *     
+     */
+    public Short getUnitCount() {
+        return unitCount;
+    }
+
+    /**
+     * Sets the value of the unitCount property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Short }
+     *     
+     */
+    public void setUnitCount(Short value) {
+        this.unitCount = value;
+    }
+
+    /**
+     * Gets the value of the unitType property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Short }
+     *     
+     */
+    public Short getUnitType() {
+        return unitType;
+    }
+
+    /**
+     * Sets the value of the unitType property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Short }
+     *     
+     */
+    public void setUnitType(Short value) {
+        this.unitType = value;
+    }
+
+    /**
+     * Gets the value of the unitTypeName property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link JAXBElement }{@code <}{@link String }{@code >}
+     *     
+     */
+    public JAXBElement<String> getUnitTypeName() {
+        return unitTypeName;
+    }
+
+    /**
+     * Sets the value of the unitTypeName property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link JAXBElement }{@code <}{@link String }{@code >}
+     *     
+     */
+    public void setUnitTypeName(JAXBElement<String> value) {
+        this.unitTypeName = value;
     }
 
     /**
@@ -171,54 +256,6 @@ public class ReqDetailNew {
      */
     public void setUnitarea(Integer value) {
         this.unitarea = value;
-    }
-
-    /**
-     * Gets the value of the unitcount property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Short }
-     *     
-     */
-    public Short getUnitcount() {
-        return unitcount;
-    }
-
-    /**
-     * Sets the value of the unitcount property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Short }
-     *     
-     */
-    public void setUnitcount(Short value) {
-        this.unitcount = value;
-    }
-
-    /**
-     * Gets the value of the unittype property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Short }
-     *     
-     */
-    public Short getUnittype() {
-        return unittype;
-    }
-
-    /**
-     * Sets the value of the unittype property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Short }
-     *     
-     */
-    public void setUnittype(Short value) {
-        this.unittype = value;
     }
 
 }

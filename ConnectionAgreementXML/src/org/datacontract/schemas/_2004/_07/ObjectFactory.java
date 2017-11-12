@@ -33,9 +33,13 @@ public class ObjectFactory {
     private final static QName _ArrayOfRequestType_QNAME = new QName("http://schemas.datacontract.org/2004/07/", "ArrayOfRequestType");
     private final static QName _RequestType_QNAME = new QName("http://schemas.datacontract.org/2004/07/", "RequestType");
     private final static QName _RequestData_QNAME = new QName("http://schemas.datacontract.org/2004/07/", "RequestData");
+    private final static QName _RequestDataCityName_QNAME = new QName("http://schemas.datacontract.org/2004/07/", "CityName");
+    private final static QName _RequestDataDistName_QNAME = new QName("http://schemas.datacontract.org/2004/07/", "DistName");
+    private final static QName _RequestDataEngOffice_QNAME = new QName("http://schemas.datacontract.org/2004/07/", "EngOffice");
     private final static QName _RequestDataPobox_QNAME = new QName("http://schemas.datacontract.org/2004/07/", "Pobox");
     private final static QName _RequestDataInvname_QNAME = new QName("http://schemas.datacontract.org/2004/07/", "invname");
     private final static QName _RequestTypeReqName_QNAME = new QName("http://schemas.datacontract.org/2004/07/", "ReqName");
+    private final static QName _ReqDetailNewUnitTypeName_QNAME = new QName("http://schemas.datacontract.org/2004/07/", "UnitTypeName");
     private final static QName _LocationDataBldPermDt_QNAME = new QName("http://schemas.datacontract.org/2004/07/", "BldPermDt");
     private final static QName _LocationDataBldPermno_QNAME = new QName("http://schemas.datacontract.org/2004/07/", "BldPermno");
     private final static QName _LocationDataBlockno_QNAME = new QName("http://schemas.datacontract.org/2004/07/", "Blockno");
@@ -46,15 +50,21 @@ public class ObjectFactory {
     private final static QName _LocationDataLocDistName_QNAME = new QName("http://schemas.datacontract.org/2004/07/", "LocDistName");
     private final static QName _LocationDataPlanno_QNAME = new QName("http://schemas.datacontract.org/2004/07/", "Planno");
     private final static QName _LocationDataPlotno_QNAME = new QName("http://schemas.datacontract.org/2004/07/", "Plotno");
+    private final static QName _LocationDataUsecodeName_QNAME = new QName("http://schemas.datacontract.org/2004/07/", "UsecodeName");
     private final static QName _CustomerDataAddress1_QNAME = new QName("http://schemas.datacontract.org/2004/07/", "Address1");
     private final static QName _CustomerDataAddress2_QNAME = new QName("http://schemas.datacontract.org/2004/07/", "Address2");
+    private final static QName _CustomerDataBookCityName_QNAME = new QName("http://schemas.datacontract.org/2004/07/", "BookCityName");
     private final static QName _CustomerDataBookDate_QNAME = new QName("http://schemas.datacontract.org/2004/07/", "BookDate");
     private final static QName _CustomerDataBookID_QNAME = new QName("http://schemas.datacontract.org/2004/07/", "BookID");
+    private final static QName _CustomerDataEmail_QNAME = new QName("http://schemas.datacontract.org/2004/07/", "Email");
     private final static QName _CustomerDataFamilyName_QNAME = new QName("http://schemas.datacontract.org/2004/07/", "FamilyName");
     private final static QName _CustomerDataFatherName_QNAME = new QName("http://schemas.datacontract.org/2004/07/", "FatherName");
     private final static QName _CustomerDataFirstName_QNAME = new QName("http://schemas.datacontract.org/2004/07/", "FirstName");
     private final static QName _CustomerDataFullName_QNAME = new QName("http://schemas.datacontract.org/2004/07/", "FullName");
     private final static QName _CustomerDataGrandFatherName_QNAME = new QName("http://schemas.datacontract.org/2004/07/", "GrandFatherName");
+    private final static QName _CustomerDataMobile_QNAME = new QName("http://schemas.datacontract.org/2004/07/", "Mobile");
+    private final static QName _CustomerDataNationality_QNAME = new QName("http://schemas.datacontract.org/2004/07/", "Nationality");
+    private final static QName _CustomerDataPOBox_QNAME = new QName("http://schemas.datacontract.org/2004/07/", "POBox");
 
     /**
      * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: org.datacontract.schemas._2004._07
@@ -220,6 +230,33 @@ public class ObjectFactory {
      * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
      * 
      */
+    @XmlElementDecl(namespace = "http://schemas.datacontract.org/2004/07/", name = "CityName", scope = RequestData.class)
+    public JAXBElement<String> createRequestDataCityName(String value) {
+        return new JAXBElement<String>(_RequestDataCityName_QNAME, String.class, RequestData.class, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://schemas.datacontract.org/2004/07/", name = "DistName", scope = RequestData.class)
+    public JAXBElement<String> createRequestDataDistName(String value) {
+        return new JAXBElement<String>(_RequestDataDistName_QNAME, String.class, RequestData.class, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://schemas.datacontract.org/2004/07/", name = "EngOffice", scope = RequestData.class)
+    public JAXBElement<String> createRequestDataEngOffice(String value) {
+        return new JAXBElement<String>(_RequestDataEngOffice_QNAME, String.class, RequestData.class, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
+     * 
+     */
     @XmlElementDecl(namespace = "http://schemas.datacontract.org/2004/07/", name = "Pobox", scope = RequestData.class)
     public JAXBElement<String> createRequestDataPobox(String value) {
         return new JAXBElement<String>(_RequestDataPobox_QNAME, String.class, RequestData.class, value);
@@ -241,6 +278,15 @@ public class ObjectFactory {
     @XmlElementDecl(namespace = "http://schemas.datacontract.org/2004/07/", name = "ReqName", scope = RequestType.class)
     public JAXBElement<String> createRequestTypeReqName(String value) {
         return new JAXBElement<String>(_RequestTypeReqName_QNAME, String.class, RequestType.class, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://schemas.datacontract.org/2004/07/", name = "UnitTypeName", scope = ReqDetailNew.class)
+    public JAXBElement<String> createReqDetailNewUnitTypeName(String value) {
+        return new JAXBElement<String>(_ReqDetailNewUnitTypeName_QNAME, String.class, ReqDetailNew.class, value);
     }
 
     /**
@@ -337,6 +383,15 @@ public class ObjectFactory {
      * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
      * 
      */
+    @XmlElementDecl(namespace = "http://schemas.datacontract.org/2004/07/", name = "UsecodeName", scope = LocationData.class)
+    public JAXBElement<String> createLocationDataUsecodeName(String value) {
+        return new JAXBElement<String>(_LocationDataUsecodeName_QNAME, String.class, LocationData.class, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
+     * 
+     */
     @XmlElementDecl(namespace = "http://schemas.datacontract.org/2004/07/", name = "Address1", scope = CustomerData.class)
     public JAXBElement<String> createCustomerDataAddress1(String value) {
         return new JAXBElement<String>(_CustomerDataAddress1_QNAME, String.class, CustomerData.class, value);
@@ -355,6 +410,15 @@ public class ObjectFactory {
      * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
      * 
      */
+    @XmlElementDecl(namespace = "http://schemas.datacontract.org/2004/07/", name = "BookCityName", scope = CustomerData.class)
+    public JAXBElement<String> createCustomerDataBookCityName(String value) {
+        return new JAXBElement<String>(_CustomerDataBookCityName_QNAME, String.class, CustomerData.class, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
+     * 
+     */
     @XmlElementDecl(namespace = "http://schemas.datacontract.org/2004/07/", name = "BookDate", scope = CustomerData.class)
     public JAXBElement<String> createCustomerDataBookDate(String value) {
         return new JAXBElement<String>(_CustomerDataBookDate_QNAME, String.class, CustomerData.class, value);
@@ -367,6 +431,33 @@ public class ObjectFactory {
     @XmlElementDecl(namespace = "http://schemas.datacontract.org/2004/07/", name = "BookID", scope = CustomerData.class)
     public JAXBElement<String> createCustomerDataBookID(String value) {
         return new JAXBElement<String>(_CustomerDataBookID_QNAME, String.class, CustomerData.class, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://schemas.datacontract.org/2004/07/", name = "CityName", scope = CustomerData.class)
+    public JAXBElement<String> createCustomerDataCityName(String value) {
+        return new JAXBElement<String>(_RequestDataCityName_QNAME, String.class, CustomerData.class, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://schemas.datacontract.org/2004/07/", name = "DistName", scope = CustomerData.class)
+    public JAXBElement<String> createCustomerDataDistName(String value) {
+        return new JAXBElement<String>(_RequestDataDistName_QNAME, String.class, CustomerData.class, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://schemas.datacontract.org/2004/07/", name = "Email", scope = CustomerData.class)
+    public JAXBElement<String> createCustomerDataEmail(String value) {
+        return new JAXBElement<String>(_CustomerDataEmail_QNAME, String.class, CustomerData.class, value);
     }
 
     /**
@@ -412,6 +503,33 @@ public class ObjectFactory {
     @XmlElementDecl(namespace = "http://schemas.datacontract.org/2004/07/", name = "GrandFatherName", scope = CustomerData.class)
     public JAXBElement<String> createCustomerDataGrandFatherName(String value) {
         return new JAXBElement<String>(_CustomerDataGrandFatherName_QNAME, String.class, CustomerData.class, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://schemas.datacontract.org/2004/07/", name = "Mobile", scope = CustomerData.class)
+    public JAXBElement<String> createCustomerDataMobile(String value) {
+        return new JAXBElement<String>(_CustomerDataMobile_QNAME, String.class, CustomerData.class, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://schemas.datacontract.org/2004/07/", name = "Nationality", scope = CustomerData.class)
+    public JAXBElement<String> createCustomerDataNationality(String value) {
+        return new JAXBElement<String>(_CustomerDataNationality_QNAME, String.class, CustomerData.class, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://schemas.datacontract.org/2004/07/", name = "POBox", scope = CustomerData.class)
+    public JAXBElement<String> createCustomerDataPOBox(String value) {
+        return new JAXBElement<String>(_CustomerDataPOBox_QNAME, String.class, CustomerData.class, value);
     }
 
 }

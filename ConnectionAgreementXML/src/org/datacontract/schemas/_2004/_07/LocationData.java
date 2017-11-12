@@ -33,6 +33,8 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="Planno" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
  *         &lt;element name="Plotno" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
  *         &lt;element name="Usecode" type="{http://www.w3.org/2001/XMLSchema}short" minOccurs="0"/&gt;
+ *         &lt;element name="UsecodeName" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
+ *         &lt;element name="VoltId" type="{http://www.w3.org/2001/XMLSchema}short" minOccurs="0"/&gt;
  *       &lt;/sequence&gt;
  *     &lt;/restriction&gt;
  *   &lt;/complexContent&gt;
@@ -56,7 +58,9 @@ import javax.xml.bind.annotation.XmlType;
     "locid",
     "planno",
     "plotno",
-    "usecode"
+    "usecode",
+    "usecodeName",
+    "voltId"
 })
 public class LocationData {
 
@@ -88,6 +92,10 @@ public class LocationData {
     protected JAXBElement<String> plotno;
     @XmlElement(name = "Usecode")
     protected Short usecode;
+    @XmlElementRef(name = "UsecodeName", namespace = "http://schemas.datacontract.org/2004/07/", type = JAXBElement.class, required = false)
+    protected JAXBElement<String> usecodeName;
+    @XmlElement(name = "VoltId")
+    protected Short voltId;
 
     /**
      * Gets the value of the bldPermDt property.
@@ -423,6 +431,54 @@ public class LocationData {
      */
     public void setUsecode(Short value) {
         this.usecode = value;
+    }
+
+    /**
+     * Gets the value of the usecodeName property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link JAXBElement }{@code <}{@link String }{@code >}
+     *     
+     */
+    public JAXBElement<String> getUsecodeName() {
+        return usecodeName;
+    }
+
+    /**
+     * Sets the value of the usecodeName property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link JAXBElement }{@code <}{@link String }{@code >}
+     *     
+     */
+    public void setUsecodeName(JAXBElement<String> value) {
+        this.usecodeName = value;
+    }
+
+    /**
+     * Gets the value of the voltId property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link Short }
+     *     
+     */
+    public Short getVoltId() {
+        return voltId;
+    }
+
+    /**
+     * Sets the value of the voltId property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link Short }
+     *     
+     */
+    public void setVoltId(Short value) {
+        this.voltId = value;
     }
 
 }
