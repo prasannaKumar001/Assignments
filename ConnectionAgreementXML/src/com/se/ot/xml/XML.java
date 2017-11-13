@@ -1,13 +1,19 @@
 package com.se.ot.xml;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 
 import javax.xml.bind.JAXBElement;
 import javax.xml.datatype.XMLGregorianCalendar;
@@ -33,6 +39,7 @@ import org.datacontract.schemas._2004._07.udsdocument.ConnectionAgreement;
 import org.datacontract.schemas._2004._07.udsdocument.ServiceResponse;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 
 
@@ -46,6 +53,21 @@ public class XML {
 			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
 			
 			Map<String,String>connectionAgrmntFlds=getCA(connectionAgreement);
+			Map<String,ArrayList<String>> unitItems= getUnitItems(connectionAgreement);
+			Map<String, String> properties=getProprties();
+			
+			System.out.println(unitItems.size());
+			
+			ArrayList<String> UnitTypeNames= unitItems.get("UnitTypeName");
+			ArrayList<String> UnitAreas=unitItems.get("UnitArea");
+			ArrayList<String> UnitCounts =unitItems.get("UnitCount");
+			ArrayList<String> CapKVAs =unitItems.get("CapKVA");
+			ArrayList<String> UnitTypes =unitItems.get("UnitType");
+			
+			
+			
+			
+			
 			
 			// root elements
 			Document doc = docBuilder.newDocument();
@@ -53,273 +75,307 @@ public class XML {
 			doc.appendChild(rootElement);
 			
 			Element requestNumber = doc.createElement("Reqid");
-			if(connectionAgrmntFlds.get("RequestID")!=null)
+			if(connectionAgrmntFlds.get("RequestID")!=null && !connectionAgrmntFlds.get("RequestID").trim().equals(""))
 			{
 				requestNumber.appendChild(doc.createTextNode(connectionAgrmntFlds.get("RequestID")));
 			}
 			rootElement.appendChild(requestNumber);	
 			
 			Element reqdate = doc.createElement("ReqDate");
-			if(connectionAgrmntFlds.get("RequestDate")!=null)
+			if(connectionAgrmntFlds.get("RequestDate")!=null && !connectionAgrmntFlds.get("RequestDate").trim().equals(""))
 			{
 				reqdate.appendChild(doc.createTextNode(connectionAgrmntFlds.get("RequestDate")));
 			}
 			rootElement.appendChild(reqdate);
 			
 			Element ReqType = doc.createElement("ReqType");
-			if(connectionAgrmntFlds.get("ReqType")!=null)
+			if(connectionAgrmntFlds.get("RequestType")!=null && !connectionAgrmntFlds.get("RequestType").trim().equals(""))
 			{
 				ReqType.appendChild(doc.createTextNode(connectionAgrmntFlds.get("RequestType")));
 			}
 			rootElement.appendChild(ReqType);
 			
 			Element FirstName = doc.createElement("FirstName");
-			if(connectionAgrmntFlds.get("FirstName")!=null)
+			if(connectionAgrmntFlds.get("FirstName")!=null && !connectionAgrmntFlds.get("FirstName").trim().equals(""))
 			{
 				FirstName.appendChild(doc.createTextNode(connectionAgrmntFlds.get("FirstName")));
 			}
 			rootElement.appendChild(FirstName);
 			
 			Element FatherName = doc.createElement("FatherName");
-			if(connectionAgrmntFlds.get("FatherName")!=null)
+			if(connectionAgrmntFlds.get("FatherName")!=null && !connectionAgrmntFlds.get("FatherName").trim().equals(""))
 			{
 				FatherName.appendChild(doc.createTextNode(connectionAgrmntFlds.get("FatherName")));
 			}
 			rootElement.appendChild(FatherName);
 			
-			Element GrandFatherName = doc.createElement("FatherName");
-			if(connectionAgrmntFlds.get("GrandFatherName")!=null)
+			Element GrandFatherName = doc.createElement("GrandFatherName");
+			if(connectionAgrmntFlds.get("GrandFatherName")!=null && !connectionAgrmntFlds.get("GrandFatherName").trim().equals(""))
 			{
 				GrandFatherName.appendChild(doc.createTextNode(connectionAgrmntFlds.get("GrandFatherName")));
 			}
 			rootElement.appendChild(GrandFatherName);
 			
 			Element FamilyName = doc.createElement("FamilyName");
-			if(connectionAgrmntFlds.get("FamilyName")!=null)
+			if(connectionAgrmntFlds.get("FamilyName")!=null && !connectionAgrmntFlds.get("FamilyName").trim().equals(""))
 			{
 				FamilyName.appendChild(doc.createTextNode(connectionAgrmntFlds.get("FamilyName")));
 			}
 			rootElement.appendChild(FamilyName);
 			
 			Element CustID = doc.createElement("CustID");
-			if(connectionAgrmntFlds.get("CustID")!=null)
+			if(connectionAgrmntFlds.get("CustID")!=null && !connectionAgrmntFlds.get("CustID").trim().equals(""))
 			{
 				CustID.appendChild(doc.createTextNode(connectionAgrmntFlds.get("CustID")));
 			}
 			rootElement.appendChild(CustID);
 			
 			Element Nationality = doc.createElement("Nationality");
-			if(connectionAgrmntFlds.get("Nationality")!=null)
+			if(connectionAgrmntFlds.get("Nationality")!=null && !connectionAgrmntFlds.get("Nationality").trim().equals(""))
 			{
 				Nationality.appendChild(doc.createTextNode(connectionAgrmntFlds.get("Nationality")));
 			}
 			rootElement.appendChild(Nationality);
 			
 			Element FullName = doc.createElement("FullName");
-			if(connectionAgrmntFlds.get("FullName")!=null)
+			if(connectionAgrmntFlds.get("FullName")!=null && !connectionAgrmntFlds.get("FullName").trim().equals(""))
 			{
 				FullName.appendChild(doc.createTextNode(connectionAgrmntFlds.get("FullName")));
 			}
 			rootElement.appendChild(FullName);
 			
 			Element BookDate = doc.createElement("BookDate");
-			if(connectionAgrmntFlds.get("BookDate")!=null)
+			if(connectionAgrmntFlds.get("BookDate")!=null && !connectionAgrmntFlds.get("BookDate").trim().equals(""))
 			{
 				BookDate.appendChild(doc.createTextNode(connectionAgrmntFlds.get("BookDate")));
 			}
 			rootElement.appendChild(BookDate);
 			
 			Element BookCityName = doc.createElement("BookCityName");
-			if(connectionAgrmntFlds.get("BookCityName")!=null)
+			if(connectionAgrmntFlds.get("BookCityName")!=null && !connectionAgrmntFlds.get("BookCityName").equals(""))
 			{
 				BookCityName.appendChild(doc.createTextNode(connectionAgrmntFlds.get("BookCityName")));
 			}
 			rootElement.appendChild(BookCityName);
 			
 			Element LocCityName = doc.createElement("LocCityName");
-			if(connectionAgrmntFlds.get("LocCityName")!=null)
+			if(connectionAgrmntFlds.get("LocCityName")!=null && !connectionAgrmntFlds.get("LocCityName").trim().equals(""))
 			{
 				LocCityName.appendChild(doc.createTextNode(connectionAgrmntFlds.get("LocCityName")));
 			}
 			rootElement.appendChild(LocCityName);
 			
 			Element Planno = doc.createElement("Planno");
-			if(connectionAgrmntFlds.get("Planno")!=null)
+			if(connectionAgrmntFlds.get("Planno")!=null && !connectionAgrmntFlds.get("Planno").trim().equals(""))
 			{
 				Planno.appendChild(doc.createTextNode(connectionAgrmntFlds.get("Planno")));
 			}
 			rootElement.appendChild(Planno);
 			
 			Element Plotno = doc.createElement("Plotno");
-			if(connectionAgrmntFlds.get("PlotNo")!=null)
+			if(connectionAgrmntFlds.get("PlotNo")!=null && !connectionAgrmntFlds.get("PlotNo").trim().equals(""))
 			{
 				Plotno.appendChild(doc.createTextNode(connectionAgrmntFlds.get("PlotNo")));
 			}
 			rootElement.appendChild(Plotno);
 			
 			Element LocAddress = doc.createElement("LocAddress");
-			if(connectionAgrmntFlds.get("LocAddress")!=null)
+			if(connectionAgrmntFlds.get("LocAddress")!=null && !connectionAgrmntFlds.get("LocAddress").trim().equals(""))
 			{
 				LocAddress.appendChild(doc.createTextNode(connectionAgrmntFlds.get("LocAddress")));
 			}
 			rootElement.appendChild(LocAddress);
 			
 			Element BldPermno = doc.createElement("BldPermno");
-			if(connectionAgrmntFlds.get("BldPermno")!=null)
+			if(connectionAgrmntFlds.get("BldPermno")!=null && !connectionAgrmntFlds.get("BldPermno").trim().equals(""))
 			{
 				BldPermno.appendChild(doc.createTextNode(connectionAgrmntFlds.get("BldPermno")));
 			}
 			rootElement.appendChild(BldPermno);
 			
 			Element BldPermDt = doc.createElement("BldPermDt");
-			if(connectionAgrmntFlds.get("BldPermDate")!=null)
+			if(connectionAgrmntFlds.get("BldPermDate")!=null && !connectionAgrmntFlds.get("BldPermDate").trim().equals(""))
 			{
 				BldPermDt.appendChild(doc.createTextNode(connectionAgrmntFlds.get("BldPermDate")));
 			}
 			rootElement.appendChild(BldPermDt);
 			
 			Element DeedNo = doc.createElement("DeedNo");
-			if(connectionAgrmntFlds.get("DeedNo")!=null)
+			if(connectionAgrmntFlds.get("DeedNo")!=null && !connectionAgrmntFlds.get("DeedNo").trim().equals(""))
 			{
 				DeedNo.appendChild(doc.createTextNode(connectionAgrmntFlds.get("DeedNo")));
 			}
 			rootElement.appendChild(DeedNo);
 			
+			Element LocDisName = doc.createElement("LocDisName");
+			if(connectionAgrmntFlds.get("LocDisName")!=null && !connectionAgrmntFlds.get("LocDisName").trim().equals(""))
+			{
+				LocDisName.appendChild(doc.createTextNode(connectionAgrmntFlds.get("LocDisName")));
+			}
+			rootElement.appendChild(LocDisName);
+			
 			Element DeedDate = doc.createElement("DeedDate");
-			if(connectionAgrmntFlds.get("DeedDate")!=null)
+			if(connectionAgrmntFlds.get("DeedDate")!=null && !connectionAgrmntFlds.get("DeedDate").trim().equals(""))
 			{
 				DeedDate.appendChild(doc.createTextNode(connectionAgrmntFlds.get("DeedDate")));
 			}
 			rootElement.appendChild(DeedDate);
 			
 			Element Mobile = doc.createElement("Mobile");
-			if(connectionAgrmntFlds.get("MobileNumber")!=null)
+			if(connectionAgrmntFlds.get("MobileNumber")!=null && !connectionAgrmntFlds.get("MobileNumber").trim().equals(""))
 			{
 				Mobile.appendChild(doc.createTextNode(connectionAgrmntFlds.get("MobileNumber")));
 			}
 			rootElement.appendChild(Mobile);
 			
 			Element HomePhone = doc.createElement("HomePhone");
-			if(connectionAgrmntFlds.get("HomePhone")!=null)
+			if(connectionAgrmntFlds.get("HomePhone")!=null && !connectionAgrmntFlds.get("HomePhone").trim().equals(""))
 			{
 				HomePhone.appendChild(doc.createTextNode(connectionAgrmntFlds.get("HomePhone")));
 			}
 			rootElement.appendChild(HomePhone);
 			
 			Element WorkPhone = doc.createElement("WorkPhone");
-			if(connectionAgrmntFlds.get("WorkPhone")!=null)
+			if(connectionAgrmntFlds.get("WorkPhone")!=null && !connectionAgrmntFlds.get("WorkPhone").trim().equals(""))
 			{
 				WorkPhone.appendChild(doc.createTextNode(connectionAgrmntFlds.get("WorkPhone")));
 			}
 			rootElement.appendChild(WorkPhone);
 			
 			Element WorkPhoneEx = doc.createElement("WorkPhoneEx");
-			if(connectionAgrmntFlds.get("WorkPhoneExt")!=null)
+			if(connectionAgrmntFlds.get("WorkPhoneExt")!=null && !connectionAgrmntFlds.get("WorkPhoneExt").trim().equals(""))
 			{
 				WorkPhoneEx.appendChild(doc.createTextNode(connectionAgrmntFlds.get("WorkPhoneExt")));
 			}
 			rootElement.appendChild(WorkPhoneEx);
 			
 			Element Email = doc.createElement("Email");
-			if(connectionAgrmntFlds.get("Email")!=null)
+			if(connectionAgrmntFlds.get("Email")!=null && !connectionAgrmntFlds.get("Email").trim().equals(""))
 			{
 				Email.appendChild(doc.createTextNode(connectionAgrmntFlds.get("Email")));
 			}
 			rootElement.appendChild(Email);
 			
 			Element POBox = doc.createElement("POBox");
-			if(connectionAgrmntFlds.get("POBox")!=null)
+			if(connectionAgrmntFlds.get("POBox")!=null && !connectionAgrmntFlds.get("POBox").trim().equals(""))
 			{
 				POBox.appendChild(doc.createTextNode(connectionAgrmntFlds.get("POBox")));
 			}
 			rootElement.appendChild(POBox);
 			
 			Element PostCode = doc.createElement("PostCode");
-			if(connectionAgrmntFlds.get("PostCode")!=null)
+			if(connectionAgrmntFlds.get("PostCode")!=null && !connectionAgrmntFlds.get("PostCode").trim().equals(""))
 			{
 				PostCode.appendChild(doc.createTextNode(connectionAgrmntFlds.get("PostCode")));
 			}
 			rootElement.appendChild(PostCode);
 			
 			Element CityName = doc.createElement("CityName");
-			if(connectionAgrmntFlds.get("CityName")!=null)
+			if(connectionAgrmntFlds.get("CityName")!=null && !connectionAgrmntFlds.get("CityName").trim().equals(""))
 			{
 				CityName.appendChild(doc.createTextNode(connectionAgrmntFlds.get("CityName")));
 			}
 			rootElement.appendChild(CityName);
 			
 			Element TotalArea = doc.createElement("TotalArea");
-			if(connectionAgrmntFlds.get("TotalArea")!=null)
+			if(connectionAgrmntFlds.get("TotalArea")!=null && !connectionAgrmntFlds.get("TotalArea").trim().equals(""))
 			{
 				TotalArea.appendChild(doc.createTextNode(connectionAgrmntFlds.get("TotalArea")));
 			}
 			rootElement.appendChild(TotalArea);
 			
 			Element TotalAmpere = doc.createElement("TotalAmpere");
-			if(connectionAgrmntFlds.get("TotalAmpere")!=null)
+			if(connectionAgrmntFlds.get("TotalAmpere")!=null && !connectionAgrmntFlds.get("TotalAmpere").trim().equals(""))
 			{
 				TotalAmpere.appendChild(doc.createTextNode(connectionAgrmntFlds.get("TotalAmpere")));
 			}
 			rootElement.appendChild(TotalAmpere);
 			
 			Element TotalKVA = doc.createElement("TotalKVA");
-			if(connectionAgrmntFlds.get("TotalKVA")!=null)
+			if(connectionAgrmntFlds.get("TotalKVA")!=null && !connectionAgrmntFlds.get("TotalKVA").trim().equals(""))
 			{
 				TotalKVA.appendChild(doc.createTextNode(connectionAgrmntFlds.get("TotalKVA")));
 			}
 			rootElement.appendChild(TotalKVA);
 			
 			Element VoltId = doc.createElement("VoltId");
-			if(connectionAgrmntFlds.get("VoltID")!=null)
+			if(connectionAgrmntFlds.get("VoltID")!=null && !connectionAgrmntFlds.get("VoltID").equals(""))
 			{
 				VoltId.appendChild(doc.createTextNode(connectionAgrmntFlds.get("VoltID")));
 			}
 			rootElement.appendChild(VoltId);
 			
 			Element UnitType = doc.createElement("UnitType");
-			if(connectionAgrmntFlds.get("UnitType")!=null)
+			rootElement.appendChild(UnitType);
+			if(UnitTypes.size()>0)
 			{
-				UnitType.appendChild(doc.createTextNode(connectionAgrmntFlds.get("UnitType")));
+				for(int i=0;i<UnitTypes.size()-1;i++)
+				{
+					String node=properties.get(UnitTypes.get(i));
+					
+					if(node!=null && !node.trim().equals(""))
+					{
+						NodeList nl = UnitType.getElementsByTagName(node);
+						if (nl.getLength() == 0) {
+							
+							  Element el= doc.createElement(node);
+							  el.appendChild(doc.createTextNode("TRUE"));
+							  UnitType.appendChild(el);
+						}
+						
+					}
+				}
 			}
 			else
 			{
-				if(connectionAgrmntFlds.get("UseCode")!=null)
+				if(connectionAgrmntFlds.get("UseCode")!=null && !connectionAgrmntFlds.get("UseCode").trim().equals(""))
 				{
-					UnitType.appendChild(doc.createTextNode(connectionAgrmntFlds.get("UseCode")));
+					Element UseCode = doc.createElement("UseCode");
+					
+					UseCode.appendChild(doc.createTextNode(connectionAgrmntFlds.get("UseCode")));
+					UnitType.appendChild(UseCode);
 				}
 			}
-			rootElement.appendChild(UnitType);
 			
-			Element requestedServiceInfo = doc.createElement("RequestedServiceInfo");
-			rootElement.appendChild(requestedServiceInfo);
 			
-			Element UnitTypeName = doc.createElement("UnitTypeName");
-			if(connectionAgrmntFlds.get("UnitTypeName")!=null)
+			
+			
+			
+			for(int i=0;i<UnitTypeNames.size()-1;i++)
 			{
-				UnitTypeName.appendChild(doc.createTextNode(connectionAgrmntFlds.get("UnitTypeName")));
+				
+				Element requestedServiceInfo = doc.createElement("RequestedServiceInfo");
+				rootElement.appendChild(requestedServiceInfo);
+				
+				Element UnitTypeName = doc.createElement("UnitTypeName");
+				if(UnitTypeNames.get(i)!=null && !UnitTypeNames.get(i).trim().equals(""))
+				{
+					UnitTypeName.appendChild(doc.createTextNode(UnitTypeNames.get(i)));
+				}
+				requestedServiceInfo.appendChild(UnitTypeName);
+				
+				Element UnitCount = doc.createElement("UnitCount");
+				if(UnitCounts.get(i)!=null && !UnitCounts.get(i).trim().equals(""))
+				{
+					UnitCount.appendChild(doc.createTextNode(UnitCounts.get(i)));
+				}
+				requestedServiceInfo.appendChild(UnitCount);
+				
+				Element UnitArea = doc.createElement("UnitArea");
+				if(UnitAreas.get(i)!=null && !UnitAreas.get(i).trim().equals(""))
+				{
+					UnitArea.appendChild(doc.createTextNode(UnitAreas.get(i)));
+				}
+				requestedServiceInfo.appendChild(UnitArea);
+				
+				Element CapKVA = doc.createElement("CapKVA");
+				if(CapKVAs.get(i)!=null && !CapKVAs.get(i).trim().equals(""))
+				{
+					CapKVA.appendChild(doc.createTextNode(CapKVAs.get(i)));
+				}
+				requestedServiceInfo.appendChild(CapKVA);
+				
 			}
-			requestedServiceInfo.appendChild(UnitTypeName);
-			
-			Element UnitCount = doc.createElement("UnitCount");
-			if(connectionAgrmntFlds.get("UnitCount")!=null)
-			{
-				UnitCount.appendChild(doc.createTextNode(connectionAgrmntFlds.get("UnitCount")));
-			}
-			requestedServiceInfo.appendChild(UnitCount);
-			
-			Element UnitArea = doc.createElement("UnitArea");
-			if(connectionAgrmntFlds.get("UnitArea")!=null)
-			{
-				UnitArea.appendChild(doc.createTextNode(connectionAgrmntFlds.get("UnitArea")));
-			}
-			requestedServiceInfo.appendChild(UnitArea);
-			
-			Element CapKVA = doc.createElement("CapKVA");
-			if(connectionAgrmntFlds.get("CapKVA")!=null)
-			{
-				CapKVA.appendChild(doc.createTextNode(connectionAgrmntFlds.get("CapKVA")));
-			}
-			requestedServiceInfo.appendChild(CapKVA);
 				
 			
 			// write the content into xml file
@@ -360,7 +416,7 @@ public class XML {
               JAXBElement<CustomerData> customerData=ca.getCustData();
               JAXBElement<ArrayOfReqDetailExist> arrayOfReqDetailExist=ca.getExistReqTypeList();
               JAXBElement<LocationData> locaData=ca.getLocData();
-              JAXBElement<ArrayOfReqDetailNew> arrayOfReqDetailNew= ca.getNewReqTypeList();
+              
               JAXBElement<RequestData> requestData=ca.getReqtData();
               JAXBElement<ArrayOfRequestType> arrayOfRequestType=ca.getReqTypeList();
               JAXBElement<ServiceResponse> serviceResponse=ca.getResponse();
@@ -369,7 +425,7 @@ public class XML {
               CustomerData custData=customerData.getValue();
               ArrayOfReqDetailExist arrOfReqDetailExit=arrayOfReqDetailExist.getValue();
               LocationData locData=locaData.getValue();
-              ArrayOfReqDetailNew arrOfReqDetailNew=arrayOfReqDetailNew.getValue();
+              
               RequestData reqData=requestData.getValue();
               ArrayOfRequestType arrOfReqType=arrayOfRequestType.getValue();
               ServiceResponse serResponse=serviceResponse.getValue();
@@ -633,6 +689,15 @@ public class XML {
             		  useCode=String.valueOf(useCodeVal);
             		  connectionAgreement.put("UseCode", useCode);
             	  }
+            	  
+            	//LocDisName
+            	  Short locdisVal=locData.getLocDistId();
+            	  String locdis=null;
+            	  if(useCodeVal!=null)
+            	  {
+            		  locdis=String.valueOf(locdisVal);
+            		  connectionAgreement.put("LocDisName", locdis);
+            	  }
               }
               
               if(reqData!=null)
@@ -698,67 +763,6 @@ public class XML {
             			  
               }
               
-              if(arrOfReqDetailNew!=null)
-              {
-            	  List<ReqDetailNew> reqDetailNewList=arrOfReqDetailNew.getReqDetailNew();
-            	  ReqDetailNew reqDetailNew=null;
-            	  if(reqDetailNewList!=null && reqDetailNewList.size()>0)
-            	  {
-            		  reqDetailNew=reqDetailNewList.get(0);
-            	  }
-            	  
-            	  
-            	  if(reqDetailNew!=null)
-            	  {
-            		//UnitTypeName
-            		  JAXBElement<String> unitTypeNameVal=reqDetailNew.getUnitTypeName();
-            		  String unitTypeName=null;
-            		  if(unitTypeNameVal!=null)
-            		  {
-            			  unitTypeName=unitTypeNameVal.getValue();
-            			  connectionAgreement.put("UnitTypeName", unitTypeName);
-            		  }
-            		  
-            		//UnitCount
-            		  Short unitCountVal=reqDetailNew.getUnitCount();
-            		  String unitCount=null;
-            		  if(unitCountVal!=null)
-            		  {
-            			  unitCount=String.valueOf(unitCount);
-            			  connectionAgreement.put("UnitCount", unitCount);
-            		  }
-            		  
-            		//UnitArea
-            		 Integer unitAreaVal=reqDetailNew.getUnitarea();
-            		 String unitArea=null;
-            		 if(unitAreaVal!=null)
-            		 {
-            			 unitArea=String.valueOf(unitAreaVal);
-            			 connectionAgreement.put("UnitArea", unitArea);
-            		 }
-            		 
-            		 //CapKVA
-            		 BigDecimal capKVAVal=reqDetailNew.getCapKVA();
-            		 String capKVA=null;
-            		 if(capKVAVal!=null)
-            		 {
-            			 capKVA=String.valueOf(capKVA);
-            			 connectionAgreement.put("CapKVA", capKVA);
-            		 }
-            		 
-            		 //UnitType
-            		 Short unitTypeVal=reqDetailNew.getUnitType();
-            		 String unitType=null;
-            		 if(unitTypeVal!=null)
-            		 {
-            			 unitType=String.valueOf(unitTypeVal);
-            			 connectionAgreement.put("UnitType", unitType);
-            		 }
-            		  
-            	  }
-          
-              }
-              
               if(arrOfReqType!=null)
               {
             	  List<RequestType> reqTypeList=arrOfReqType.getRequestType();
@@ -780,10 +784,140 @@ public class XML {
             		  }
             	  }
               }
-             
            }
+             
+           
            return connectionAgreement;
      }
+	 
+	 
+	 public static Map<String,ArrayList<String>> getUnitItems(ConnectionAgreement ca)
+	 {
+		 Map <String,ArrayList<String>> connectionAgreement=new HashMap<String ,ArrayList<String>>();
+		 ArrayList<String> UnitTypeNames=new ArrayList<String>();
+		 ArrayList<String> UnitCounts=new  ArrayList<String>();
+		 ArrayList<String> UnitAreas=new  ArrayList<String>();
+		 ArrayList<String> CapKVAs=new  ArrayList<String>();
+		 ArrayList<String> UnitTypes=new ArrayList<String>();
+         if (ca!=null)
+         {
+        	 JAXBElement<ArrayOfReqDetailNew> arrayOfReqDetailNew= ca.getNewReqTypeList();
+        	 ArrayOfReqDetailNew arrOfReqDetailNew=arrayOfReqDetailNew.getValue();
+        	 if(arrOfReqDetailNew!=null)
+             {
+           	  List<ReqDetailNew> reqDetailNewList=arrOfReqDetailNew.getReqDetailNew();
+           	  ReqDetailNew reqDetailNew=null;
+           	  if(reqDetailNewList!=null && reqDetailNewList.size()>0)
+           	  {
+           		  for(int i=0;i<reqDetailNewList.size()-1;i++)
+           		  {
+           			  reqDetailNew=reqDetailNewList.get(i);
+           			  
+           			  if(reqDetailNew!=null)
+                   	  {
+                   		//UnitTypeName
+                   		  JAXBElement<String> unitTypeNameVal=reqDetailNew.getUnitTypeName();
+                   		  String unitTypeName=null;
+                   		  if(unitTypeNameVal!=null)
+                   		  {
+                   			  unitTypeName=unitTypeNameVal.getValue();
+                   			  UnitTypeNames.add(unitTypeName);
+                   			  
+                   		  }
+                   		  
+                   		//UnitCount
+                   		  Short unitCountVal=reqDetailNew.getUnitCount();
+                   		  String unitCount=null;
+                   		  if(unitCountVal!=null)
+                   		  {
+                   			  unitCount=String.valueOf(unitCountVal);
+                   			  UnitCounts.add(unitCount);
+                   			  
+                   		  }
+                   		  
+                   		//UnitArea
+                   		 Integer unitAreaVal=reqDetailNew.getUnitarea();
+                   		 String unitArea=null;
+                   		 if(unitAreaVal!=null)
+                   		 {
+                   			 unitArea=String.valueOf(unitAreaVal);
+                   			 UnitAreas.add(unitArea);
+                   			 
+                   		 }
+                   		 
+                   		 //CapKVA
+                   		 BigDecimal capKVAVal=reqDetailNew.getCapKVA();
+                   		 String capKVA=null;
+                   		 if(capKVAVal!=null)
+                   		 {
+                   			 capKVA=String.valueOf(capKVAVal);
+                   			 CapKVAs.add(capKVA);
+                   			 
+                   		 }
+                   		 
+                   		 //UnitType
+                   		 Short unitTypeVal=reqDetailNew.getUnitType();
+                   		 String unitType=null;
+                   		 if(unitTypeVal!=null)
+                   		 {
+                   			 unitType=String.valueOf(unitTypeVal);
+                   			 UnitTypes.add(unitType);
+                   		 }
+                   		  
+                   	  }
+           		  }
+           	  }
+           	  
+             }
+         }
+         
+         connectionAgreement.put("UnitTypeName",UnitTypeNames );
+         connectionAgreement.put("UnitArea", UnitAreas);
+         connectionAgreement.put("UnitCount", UnitCounts);
+         connectionAgreement.put("CapKVA", CapKVAs);
+         connectionAgreement.put("UnitType",UnitTypes);
+		return connectionAgreement;
+	 }
+	 
+	 public static Map<String,String> getProprties()
+	 {
+		Map<String,String> usageTypeValues=new HashMap<String,String>();
+		Properties prop = new Properties();
+		InputStream input = null;
 
+		try 
+		{
+			input = new FileInputStream("config.properties");
+			// load a properties file
+			prop.load(input);
+			String usageType=prop.getProperty("usageType");
+			System.out.println(usageType);
+			
+			String [] UsageTypes = usageType.split(",");
+			for(String s:UsageTypes)
+			{
+				String [] type=s.split(":");
+				usageTypeValues.put(type[0], type[1]);
+			}
+		}
+		catch (IOException ex) 
+		{
+			ex.printStackTrace();
+		} 
+		finally 
+		{
+			if (input != null) 
+			{
+				try 
+				{
+					input.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return usageTypeValues;	 
+	 }
+	 
 }
  

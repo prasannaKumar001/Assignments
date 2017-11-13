@@ -55,7 +55,7 @@ public final class IUDSDocumentSrvcLib_BasicHttpBindingIUDSDocumentSrvcLib_Clien
         
         {
         System.out.println("Invoking getConnectionAgreement...");
-        java.lang.Integer _getConnectionAgreement_reqID = Integer.valueOf(172500086);
+        java.lang.Integer _getConnectionAgreement_reqID = Integer.valueOf(172500075);
         try {
             org.datacontract.schemas._2004._07.udsdocument.ConnectionAgreement _getConnectionAgreement__return = port.getConnectionAgreement(_getConnectionAgreement_reqID);
             System.out.println("getConnectionAgreement.result=" + _getConnectionAgreement__return);
