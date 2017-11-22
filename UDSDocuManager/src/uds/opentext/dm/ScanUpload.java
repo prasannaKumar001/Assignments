@@ -46,6 +46,10 @@ public class ScanUpload extends HttpServlet {
 		String USERNAME=prop.getProperty("UDS.USERNAME");
 		String PASSWORD=prop.getProperty("UDS.PASSWORD");
 		
+		String documentType=null;
+		String subscriberNumber=null;
+		
+		
 		String categoryID=prop.getProperty("UDS.CategoryTemplateID");
 		int categoryTemplateID = 0;
 		if(categoryID!=null && !categoryID.equals(""))
@@ -112,10 +116,31 @@ public class ScanUpload extends HttpServlet {
 	                    // saves the file to upload directory
 	                    item.write(uploadedFile);
 	                }
+	                
+	                if(item.isFormField())
+	                {
+	                	//System.out.println(item.getName());
+	                	if(item.getFieldName().equals("docType"))
+	                	{
+	                		System.out.println(item.getFieldName());
+	                		System.out.println(item.getString());
+	                		documentType=item.getString();
+	                	}
+	                	
+	                	if(item.getFieldName().equals("subNum"))
+	                	{
+	                		System.out.println(item.getFieldName());
+	                		System.out.println(item.getString());
+	                		subscriberNumber=item.getString();
+	                	}
+	                	
+	                	//System.out.println(item.);
+	                	
+	                }
 	            }
 	
 	            // displays done.jsp page after upload finished
-	            OTUtility.uploaddocument(authToken,filePath,85457,categoryTemplateID);
+	            OTUtility.uploaddocument(authToken,filePath,85457,categoryTemplateID,subscriberNumber,documentType);
 	            //getServletContext().getRequestDispatcher("/done.jsp").forward(request, response);
 	            //response.
 	      

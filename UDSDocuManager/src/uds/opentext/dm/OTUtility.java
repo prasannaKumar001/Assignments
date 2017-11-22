@@ -63,6 +63,7 @@ public class OTUtility {
 	public static final String CORE_NAMESPACE = "urn:Core.service.livelink.opentext.com";
 	static final Logger LOGGER = Logger.getLogger(OTUtility.class);
 	
+	//Authentication TOken
 	public static String getAuthToken(String USERNAME,String PASSWORD)
 	{
 		
@@ -93,8 +94,9 @@ public class OTUtility {
 			LOGGER.error(e.getMessage());
 			LOGGER.error(e.getFault().getFaultCode());
 			LOGGER.info(e.getMessage());
-			System.out.println("FAILED!\n");
-			System.out.println(e.getFault().getFaultCode() + " : " + e.getMessage());
+			//System.out.println("FAILED!\n");
+			//System.out.println(e.getFault().getFaultCode() + " : " + e.getMessage());
+			return authToken;
 			
 		}
 		
@@ -102,6 +104,8 @@ public class OTUtility {
 		
 	}
 	
+	
+	//Document Management Client 
 	public static DocumentManagement getDocumentManagement(String authToken)
 	{
 		
@@ -156,12 +160,16 @@ public class OTUtility {
 		return docManClient;
 	}
 	
+	
+	//returns Document Context
 	public static Map<String,String> getContext(int dataID,String authToken)
 	{
 		DocumentManagement docManClient=null;
 		Map<String,String> docContext=new HashMap<String,String>();
 		String contextID=null;
 		String docuName=null;
+		try 
+		{
 			docManClient=OTUtility.getDocumentManagement(authToken);
 			System.out.print("Generating context ID...");
 			contextID = docManClient.getVersionContentsContext(dataID, 0);
@@ -173,9 +181,16 @@ public class OTUtility {
 				docContext.put("contextID", contextID);
 				docContext.put("docuName", docuName);
 			}
+		}
+		catch(Exception e)
+		{
+			LOGGER.error(e.getMessage());
+		}
 		return docContext;
 	}
 	
+	
+	//returns Content Service client
 	public static ContentService getContentService(String authToken,String contextID)
 	{
 		OTAuthentication otAuth = null;
@@ -236,6 +251,8 @@ public class OTUtility {
 		
 	}
 	
+	
+	//returns Document stream 
 	public static StreamingDataHandler downloadDoc(String authToken,String contextID)
 	{
 		// Create a StreamingDataHandler to download the file with
@@ -267,6 +284,7 @@ public class OTUtility {
 		return downloadStream;
 	}
 	
+	//returns all documents related to request number
 	public static List<Node> getChildren(String authToken,long parentID)
 	{
 		DocumentManagement docManClient=null;
@@ -283,17 +301,21 @@ public class OTUtility {
 		catch(Exception e)
 		{
 			LOGGER.error(e.getMessage());
+			e.printStackTrace();
 		}
 		return nodes;
 			
 	}
 	
-	public static String getNodeName(Node node)
+	public static boolean getNodeExcluded(Node node)
 	{
-		return node.getName();
+		BooleanValue flag=(BooleanValue)node.getMetadata().getAttributeGroups().get(0).getValues().get(8);
+		boolean flag1=flag.getValues().get(0);
+		return flag1;
 	}
 	
-	public static void uploaddocument(String authtoken,String filePath,int parentID,int categoryTemplateID)
+	//upload document to content server
+	public static void uploaddocument(String authtoken,String filePath,int parentID,int categoryTemplateID,String subscriberNumber,String documentType)
 	{
 		//String authtoken=OTUtility.getAuthToken();
 		OTAuthentication otAuth = null;
@@ -382,22 +404,26 @@ public class OTUtility {
 			
 			//System.out.print("Uploading document...");
 			String objectID = contentServiceClient.uploadContent(new DataHandler(new FileDataSource(file)));
+			
 			//System.out.println("SUCCESS!\n");
 			//System.out.println("New document uploaded with ID = " + objectID);
 			
 			int dataid=Integer.valueOf(objectID);
-			OTUtility.addCategory(authtoken,dataid,categoryTemplateID);
+			updateUploadedDocument(authtoken, dataid, categoryTemplateID, documentType, subscriberNumber);
+			//OTUtility.addCategory(authtoken,dataid,categoryTemplateID);
 			
 		}
 		catch (SOAPFaultException | IOException | DatatypeConfigurationException | SOAPException e)
 		{
 			System.out.println("FAILED!\n");
 			System.out.println( " : " + e.getMessage());
+			LOGGER.error(e.getMessage());
 			return;
 		}
 		
 	}
 	
+	//copy from one request no to another req no.
 	public static String copyDocument(String authToken,int parentid,int docID,String newName)
 	{
 		DocumentManagement docManClient=null;
@@ -405,19 +431,19 @@ public class OTUtility {
 		try
 		{
 			//authToken=OTUtility.getAuthToken();
-
 			docManClient=OTUtility.getDocumentManagement(authToken);
 			Node n=docManClient.copyNode(docID, parentid, newName, null);
 			//System.out.println(n.getID());
 		}
 		catch(Exception e)
 		{
-			
+			LOGGER.error(e.getMessage());
 		}
 		return null;
 		
 	}
 	
+	//Move Document from one req no to another.
 	public static String moveDocument(String authToken,int dataID, int parentID)
 	{
 		DocumentManagement docManClient=null;
@@ -441,6 +467,7 @@ public class OTUtility {
 		return "Moved";
 	}
 	
+	//delete Document 
 	public static String deleteDocument(String authToken,int dataID)
 	{
 		DocumentManagement docManClient=null;
@@ -454,11 +481,106 @@ public class OTUtility {
 		}
 		catch(Exception e)
 		{
-			
+			LOGGER.error(e.getMessage());
 		}
 		return "deleted";
 	}
 	
+	//updating category after uploading document
+	public  static void updateUploadedDocument(String authToken, int dataid,int categoryTemplateID,String documentType,String subscriberNumber)
+	{
+		DocumentManagement fDocMan=null;
+		Node node;
+		
+		try
+		{
+			//authToken=OTUtility.getAuthToken();
+			fDocMan=OTUtility.getDocumentManagement(authToken);
+			AttributeGroup attrgroup = fDocMan.getCategoryTemplate(categoryTemplateID);
+			String toBeUpdateCatName =attrgroup.getDisplayName();
+			List <AttributeGroup> nodeattrgroups = new ArrayList<AttributeGroup>();
+			node=fDocMan.getNode(dataid);
+			Node processingNode = node;
+			Metadata updateMetadata =processingNode.getMetadata();
+			//String currAttributeName ="";
+			String dataType;
+			   
+			if (updateMetadata!= null )
+			{
+				nodeattrgroups = updateMetadata.getAttributeGroups();	
+			    if (nodeattrgroups.size()>0)
+			    {
+				    for (AttributeGroup atg:nodeattrgroups)
+				    {
+				    	String currCategoryName =atg.getDisplayName();
+				    	if ((currCategoryName.compareToIgnoreCase(toBeUpdateCatName))==0)
+				    	{
+				    		//Update Existing Category Values
+				    		StringValue str=(StringValue) atg.getValues().get(1);
+				    		str.getValues().clear();
+			    			str.getValues().add(subscriberNumber);
+			    			
+			    			StringValue str1=(StringValue) atg.getValues().get(7);
+				    		str1.getValues().clear();
+			    			str1.getValues().add(documentType);
+				    		/*for (DataValue currDataValue:atg.getValues())
+				    		{
+				    			dataType=currDataValue.getClass().getName();
+				    			
+				    			if(dataType.endsWith("StringValue"))
+				    			{
+				    				System.out.println("String");
+				    			}
+				    			if(dataType.endsWith("DateValue"))
+				    			{
+				    				System.out.println("Date");
+				    			}
+				    			if(dataType.endsWith("BooleanValue"))
+				    			{
+				    				System.out.println("boolean");
+				    				BooleanValue str = (BooleanValue) currDataValue;
+					    			str.getValues().clear();
+					    			str.getValues().add(true);
+				    			}*/
+				    			
+				    			//System.out.println("Type: "+currDataValue.getClass().getName());
+				    			//currAttributeName =currDataValue.getDescription();
+				    			
+				    			
+				    			//break;
+				    			//System.out.println("category value: "+currAttributeName.toString());
+				    			// Put the currAttribute name in the HashMap to get value
+				    			// compare if value is not null and then update Value
+		
+				    			/*for(PAttributes pattr: proCat.getProjectAttributes())
+				        		{
+				         			if (currAttributeName.compareToIgnoreCase(pattr.getName())==0){
+				          			if (currDataValue instanceof StringValue){
+				           
+				          		}
+				    		}*/
+				        }
+				    }
+			    }
+			    processingNode.setMetadata(updateMetadata);
+				fDocMan.updateNode(processingNode); 
+			}
+			else
+			{
+				System.out.println("Currently no Category is Attached to this Document ");
+			}
+			   
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+	}
+	
+	
+	
+	//adding category to the document while uploading document. 
 	public static void addCategory(String authToken,int dataid,int categoryTemplateID)
 	{
 		DocumentManagement docManClient=null;
@@ -477,12 +599,12 @@ public class OTUtility {
 			n=docManClient.getNode(dataid);
 			//metadata=n.getMetadata();
 			//attributes = categoryTemplate.getValues();
-			directedByValue.getValues().clear();
+			//directedByValue.getValues().clear();
 			directedByValue.getValues().add("343435566643645754");
 			
 			
-			metadata.getAttributeGroups().add(categoryTemplate);
-			
+			//metadata.getAttributeGroups().add(categoryTemplate);
+			metadata.getAttributeGroups().add(4, categoryTemplate);
 			n.setMetadata(metadata);
 			docManClient.updateNode(n);
 			//n.getMetadata();
@@ -507,11 +629,13 @@ public class OTUtility {
 			
 			//System.out.println("updated");
 		}
-		catch (Exception e) {
-			// TODO: handle exception
+		catch (Exception e) 
+		{
+			LOGGER.error(e.getMessage());
 		}
 	}
 	
+	//Update existing category for exclude option
 	public static void updateCategory(String authToken,int dataid,int categoryTemplateID)
 	{
 		DocumentManagement fDocMan=null;
@@ -541,7 +665,7 @@ public class OTUtility {
 				    	if ((currCategoryName.compareToIgnoreCase(toBeUpdateCatName))==0)
 				    	{
 				    		//Update Existing Category Values
-				    		BooleanValue str=(BooleanValue) atg.getValues().get(9);
+				    		BooleanValue str=(BooleanValue) atg.getValues().get(8);
 				    		str.getValues().clear();
 			    			str.getValues().add(true);
 				    		/*for (DataValue currDataValue:atg.getValues())
@@ -598,6 +722,65 @@ public class OTUtility {
 		}
 	}
 	
+	
+	
+	//Update existing category for exclude option
+		public static void updateExcludeCategory(String authToken,int dataid,int categoryTemplateID)
+		{
+			DocumentManagement fDocMan=null;
+			Node node;
+			
+			try
+			{
+				//authToken=OTUtility.getAuthToken();
+				fDocMan=OTUtility.getDocumentManagement(authToken);
+				AttributeGroup attrgroup = fDocMan.getCategoryTemplate(categoryTemplateID);
+				String toBeUpdateCatName =attrgroup.getDisplayName();
+				List <AttributeGroup> nodeattrgroups = new ArrayList<AttributeGroup>();
+				node=fDocMan.getNode(dataid);
+				Node processingNode = node;
+				Metadata updateMetadata =processingNode.getMetadata();
+				//String currAttributeName ="";
+				String dataType;
+				   
+				if (updateMetadata!= null )
+				{
+					nodeattrgroups = updateMetadata.getAttributeGroups();	
+				    if (nodeattrgroups.size()>0)
+				    {
+					    for (AttributeGroup atg:nodeattrgroups)
+					    {
+					    	String currCategoryName =atg.getDisplayName();
+					    	if ((currCategoryName.compareToIgnoreCase(toBeUpdateCatName))==0)
+					    	{
+					    		//Update Existing Category Values
+					    		BooleanValue str=(BooleanValue) atg.getValues().get(8);
+					    		str.getValues().clear();
+				    			str.getValues().add(false);
+					    		
+					        }
+					    }
+				    }
+				    processingNode.setMetadata(updateMetadata);
+					fDocMan.updateNode(processingNode); 
+				}
+				else
+				{
+					System.out.println("Currently no Category is Attached to this Document ");
+				}
+				   
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+		
+	
+	
+	
+	
+	//listing excluded nodes
 	public static List<Node> excludedNodes(String authToken,int dataID)
 	{
 		DocumentManagement fDocMan=null;
@@ -629,7 +812,7 @@ public class OTUtility {
 							if(atg!=null)
 							{
 								//Update Existing Category Values
-								BooleanValue str=(BooleanValue) atg.getValues().get(9);
+								BooleanValue str=(BooleanValue) atg.getValues().get(8);
 								List<Boolean> flag=str.getValues();
 								//System.out.println(flag.size());
 								if(flag.size()!=0)
@@ -661,6 +844,7 @@ public class OTUtility {
 		return excludedNodes;
 	}
 	
+	//
 	public static Map<String,String> getNode(String authToken,int dataID)
 	{
 		DocumentManagement docManClient=null;
@@ -709,7 +893,7 @@ public class OTUtility {
 				    				for(XMLGregorianCalendar s:dataValues)
 				    				{	
 				    					
-				    					Date d=new Date(s.getYear(),s.getMonth(),s.getDay());
+				    					Date d=s.toGregorianCalendar().getTime();
 				    					 try 
 				    					    {  
 				    					      
@@ -760,6 +944,46 @@ public class OTUtility {
 			// TODO: handle exception
 		}
 		return retVal;
+	}
+	
+	public static void downloadAllMailAttachments(String authToken,List<Integer> dataids)
+	{
+		// Create a StreamingDataHandler to download the file with
+				StreamingDataHandler downloadStream = null;
+				ContentService contentServiceClient=null;
+				String FILE_PATH="C:\\temp\\mail\\";
+				Map<String,String> docContext=new HashMap<String,String>();
+				try 
+				{
+					for(int i:dataids)
+					{
+						docContext=OTUtility.getContext(i, authToken);
+						contentServiceClient=OTUtility.getContentService(authToken, docContext.get("contextID"));
+						//System.out.println("Downloading file...");
+						downloadStream = (StreamingDataHandler) contentServiceClient.downloadContent(docContext.get("contextID"));
+						//String contenttype=downloadStream.getContentType();
+						String fileName=docContext.get("docuName");
+						//System.out.println(contenttype+"::::"+fileName);
+						File file = new File(FILE_PATH);
+						if(file.isDirectory())
+						{
+							File fle=new File(FILE_PATH+fileName);
+							downloadStream.moveTo(fle);
+							//System.out.println(contenttype +" ............"+ fileName);
+							//System.out.println("Downloaded " + file.length() + " bytes to " + FILE_PATH + ".\n");
+						}
+					
+					}
+					      
+				}
+				
+				catch (Exception e)
+				{
+					LOGGER.error(e.getMessage());
+					System.out.println("Failed to download file!\n");
+					System.out.println(e.getMessage());
+				}
+				
 	}
 	
 }

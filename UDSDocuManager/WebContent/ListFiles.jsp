@@ -1,4 +1,6 @@
 
+<%@page import="java.util.ArrayList"%>
+<%@page import="java.util.HashMap"%>
 <%@page import="java.util.Map"%>
 <%@page import="java.util.Date"%>
 <%@page import="java.util.Properties"%>
@@ -16,19 +18,41 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="x-ua-compatible" content="IE=edge">
+
+	<script type="text/javascript" src="script/jquery-3.2.1.min.js"></script>
+  	<script type="text/javascript" src="script/jquery-3.2.1.js"></script>
+  	<script type="text/javascript" src="script/jquery-ui.js"></script>
+	 <LINK REL="stylesheet" TYPE="text/css" HREF="style/screen.css?v=1344.1360">
+	 <link rel="stylesheet" TYPE="text/css"  href="style/jquery-ui.css">
+	 <link rel="stylesheet" type="text/css" href="style/datatables.min.css"/>
+	 <script type="text/javascript" src="script/datatables.min.js"></script>
+	 <script type="text/javascript" src="script/ot.js"></script>
+	 <script type="text/javascript" src="Resources/dynamsoft.webtwain.initiate.js"></script>
+    <script type="text/javascript" src="Resources/dynamsoft.webtwain.config.js"></script>
+    <link type="text/css" rel="stylesheet" href="style/waitMe.css">
+     <script src="script/waitMe.js"></script>
+    
 	<script type="text/javascript">
-	var DWObject;
-	var console = window['console']?window['console']:{'log':function(){}};
-	Dynamsoft.WebTwainEnv.RegisterEvent('OnWebTwainReady', Dynamsoft_OnReady); // Register OnWebTwainReady event. This event fires as soon as Dynamic Web TWAIN is initialized and ready to be used
-		
-	function Dynamsoft_OnReady() {
+	
+		if (typeof(UserAgentInfo) != 'undefined' && !window.addEventListener) 
+		{ 
+	   		 UserAgentInfo.strBrowser=1; 
+		} 
+	
+		Dynamsoft.WebTwainEnv.AutoLoad = false; // The property is set to true by default.
+		function Dynamsoft_OnReady() {
 	    DWObject = Dynamsoft.WebTwainEnv.GetWebTwain('dwtcontrolContainer'); // Get the Dynamic Web TWAIN object that is embeded in the div with id 'dwtcontrolContainer'
 	    if (DWObject) {
 	        DWObject.RegisterEvent('OnPostAllTransfers'); //SaveWithFileDialog
 	    }
-	}
+		}
 	
 	function AcquireImage() {
+		var DWObject;
+		var console = window['console']?window['console']:{'log':function(){}};
+		//Dynamsoft.WebTwainEnv.RegisterEvent('OnWebTwainReady', Dynamsoft_OnReady); // Register OnWebTwainReady event. This event fires as soon as Dynamic Web TWAIN is initialized and ready to be used
+		LoadControl();	
 		
 	    if (DWObject) {
 	        var bSelected = DWObject.SelectSource();
@@ -62,26 +86,7 @@
 	    }
 	}
 
-	function SaveWithFileDialog() {
-	    if (DWObject) {
-	        if (DWObject.HowManyImagesInBuffer > 0) {
-	            DWObject.IfShowFileDialog = true;
-	            if (document.getElementById("imgTypejpeg").checked == true) {
-	                //If the current image is B&W
-	                //1 is B&W, 8 is Gray, 24 is RGB
-	                if (DWObject.GetImageBitDepth(DWObject.CurrentImageIndexInBuffer) == 1)
-	                    //If so, convert the image to Gray
-	                    DWObject.ConvertToGrayScale(DWObject.CurrentImageIndexInBuffer);
-	                //Save image in JPEG
-	                DWObject.SaveAsJPEG("DynamicWebTWAIN.jpg", DWObject.CurrentImageIndexInBuffer);
-	            }
-	            else if (document.getElementById("imgTypetiff").checked == true)
-	                DWObject.SaveAllAsMultiPageTIFF("DynamicWebTWAIN.tiff", OnSuccess, OnFailure);
-	            else if (document.getElementById("imgTypepdf").checked == true)
-	                DWObject.SaveAllAsPDF("DynamicWebTWAIN.pdf", OnSuccess, OnFailure);
-	        }
-	    }
-	}
+	
 	
 	function upload()
 	{
@@ -99,254 +104,33 @@
 				uploadfilename,
 				OnSuccess, OnFailure
 				);
+		exit();
 	}
 	
 	
-	function downloadAllFiles()
-	{
-		alert("in downloadfiles()")
-		if((document.getElementById("Scan").selected))
-		{
-			AcquireImage();
-			alert("in scan")
-			var opt = {
-			        autoOpen: false,
-			        modal: true,
-			        width: 550,
-			        height:650,
-			        title: 'Details'
-			};
-
-			$("#dialog").dialog(opt).dialog("open");
-			//dialog();
-		}
-		
-		if((document.getElementById("Display").selected))
-		{
-			var chk=0;
-			var checkedValue = null; 
-			inputElements = document.getElementsByName('foo');
-			for(var i=0; inputElements[i]; ++i)
-			{
-				if(inputElements[i].checked)
-			    {
-					chk=chk+1;
-			    }
-			  }
-			if(chk>1)
-			{
-				alert("Multiple Documents can not be displayed");
-			}
-			if(chk==0)
-			{
-				alert("Please select atleast one")
-			}
-			if(chk==1)
-			{
-				for(var i=0; inputElements[i]; ++i)
-				{
-					if(inputElements[i].checked)
-				    {
-			           checkedValue = inputElements[i].value;
-			           dispalayFile(checkedValue,'Display')
-			           //alert(checkedValue)
-				    }
-				}
-				inputElements=null;
-			}
-		}
-	/*	if((document.getElementById("Export").selected))
-		{
-			var checkedValue = null; 
-			var inputElements = document.getElementsByName('foo');
-			for(var i=0; inputElements[i]; ++i)
-			{
-			      if(inputElements[i].checked)
-			      {
-			           checkedValue = inputElements[i].value;
-			           dispalayFile(checkedValue,'dispaly')
-			           //alert(checkedValue)
-			           
-			      }
-			}
-			
-		}*/
-		if((document.getElementById("Copy").selected))
-		{
-			var chk=0;
-			var checkedValue = null; 
-			inputElements = document.getElementsByName('foo');
-			for(var i=0; inputElements[i]; ++i)
-			{
-				if(inputElements[i].checked)
-			    {
-					chk=chk+1;
-			    }
-			  }
-			if(chk>1)
-			{
-				alert("Multiple Documents can not be Copied");
-			}
-			if(chk==0)
-			{
-				alert("Please select atleast one")
-			}
-			if(chk==1)
-			{
-				for(var i=0; inputElements[i]; ++i)
-				{
-					if(inputElements[i].checked)
-				    {
-			           checkedValue = inputElements[i].value;
-			           copyFile(checkedValue,'Copy')
-			           //alert(checkedValue)
-				    }
-				}
-			inputElements=null;
-			}
-		}
-		
-		if((document.getElementById("Move").selected))
-		{
-			var chk=0;
-			var checkedValue = null; 
-			inputElements = document.getElementsByName('foo');
-			for(var i=0; inputElements[i]; ++i)
-			{
-				if(inputElements[i].checked)
-			    {
-					chk=chk+1;
-			    }
-			  }
-			if(chk>1)
-			{
-				alert("Multiple Documents can not be Moved");
-			}
-			if(chk==0)
-			{
-				alert("Please select atleast one")
-			}
-			if(chk==1)
-			{
-				for(var i=0; inputElements[i]; ++i)
-				{
-					if(inputElements[i].checked)
-				    {
-			           checkedValue = inputElements[i].value;
-			           moveFile(checkedValue,'Move')
-			           //alert(checkedValue)
-				    }
-				}
-			inputElements=null;
-			}
-		}
-		/*if((document.getElementById("Delete").selected))
-		{
-			var chk=0;
-			var checkedValue = null; 
-			inputElements = document.getElementsByName('foo');
-			for(var i=0; inputElements[i]; ++i)
-			{
-				if(inputElements[i].checked)
-			    {
-					chk=chk+1;
-			    }
-			  }
-			if(chk>1)
-			{
-				alert("Multiple Documents can not be deleted");
-			}
-			if(chk==0)
-			{
-				alert("Please select atleast one")
-			}
-			if(chk==1)
-			{
-				for(var i=0; inputElements[i]; ++i)
-				{
-					if(inputElements[i].checked)
-				    {
-			           checkedValue = inputElements[i].value;
-			           deleteFile(checkedValue,'Delete')
-			           //alert(checkedValue)
-				    }
-				}
-			inputElements=null;
-			}
-		}
-		*/
-		if((document.getElementById("Upload").selected))
-		{
-			var	w = window.open('http://localhost:8080/UDSDocuManager/upload.jsp','upload','directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=no,width=500,height=300');
-
-			if ( w.focus )
-			{
-				w.focus();
-			}
-			var timer = setInterval(function() {   
-			    if(w.closed) {  
-			    	window.location.reload(true);
-			        clearInterval(timer);  
-			        //alert('closed');  
-			    }  
-			}, 1000);
-		}
-		
-		if((document.getElementById("Exclude").selected))
-		{
-			var chk=0;
-			var checkedValue = []; 
-			inputElements = document.getElementsByName('foo');
-			for(var i=0; inputElements[i]; ++i)
-			{
-				if(inputElements[i].checked)
-			    {
-					chk=chk+1;
-			    }
-			}
-			
-			if(chk==0)
-			{
-				alert("Please select atleast one")
-			}
-			if(chk>=1)
-			{
-				for(var i=0; inputElements[i]; ++i)
-				{
-					if(inputElements[i].checked)
-				    {
-			           checkedValue[i] = inputElements[i].value;
-			          
-			           //alert(checkedValue)
-				    }
-				}
-				
-			Exclude(checkedValue,'Exclude')
-			inputElements=null;
-			}
-		}
-
-	}	
+	
 	function exit()
 	{
 		$("#dialog").dialog("close");
 	}
+	
+	function UnloadControl() {
+		  //Unload the control manually
+		  Dynamsoft.WebTwainEnv.Unload();
+		}
+	function LoadControl() {
+		  //Load the control manually
+		  Dynamsoft.WebTwainEnv.Load(); 
+		}
+	
+	
 	</script>
 	<style type="text/css">
 		
  			.browseRow1 { background-color: #FFFFFF;  } 
- 			.browseRow2 { background-color: #FFFFFF;  }
+ 			
 	</style>
-	<script src="script/jquery-3.2.1.min.js"></script>
-  	<script src="script/jquery-3.2.1.js"></script>
-  	<script src="script/jquery-ui.js"></script>
-	 <LINK REL="stylesheet" TYPE="text/css" HREF="style/screen.css?v=1344.1360">
-	 <link rel="stylesheet" TYPE="text/css"  href="style/jquery-ui.css">
-	 <link rel="stylesheet" type="text/css" href="style/datatables.min.css"/>
-	 <script type="text/javascript" src="script/datatables.min.js"></script>
-	 <script type="text/javascript" src="script/ot.js"></script>
-	 <script type="text/javascript" src="Resources/dynamsoft.webtwain.initiate.js"></script>
-    <script type="text/javascript" src="Resources/dynamsoft.webtwain.config.js"></script>
+	
 	<style type="text/css">
 		.model{
 			display: none; /* Hidden by default */
@@ -407,81 +191,63 @@
 				
 		 .dataTables_length{
 			display:inline-block;
+			}
+			
+			body{
+				min-height: 600px;
+				max-height: 600px;
 			}		
 	</style>
 <title>OpenText Document List</title>
 </head>
-<body>
-	<div id="header-inner">
-		<h1 id="logo">
-			<img alt="" src="headerbar_content_server.png">
-		</h1>
-	</div>
+<body id="container">
+	
 	<%
 				Properties prop = new Properties();
 				prop.load(getServletContext().getResourceAsStream("/WEB-INF/config.properties"));
 				String USERNAME=prop.getProperty("UDS.USERNAME");
 				String PASSWORD=prop.getProperty("UDS.PASSWORD");
-				
-				
+
 				System.out.print("USERNAME: "+USERNAME);
 				
-				String parentID=request.getParameter("parentID");
+				//	String parentID=request.getParameter("parentID");
 			
 				//need to write logic to get parent id from DB
-				String authToken=OTUtility.getAuthToken(USERNAME, PASSWORD);
-				Map<String,String> retVal=OTUtility.getNode(authToken, 85457);
-				String RequestNumber=retVal.get("RequestNumber");
-				String RequestDate=retVal.get("RequestDate");
-				String SubscriberName=retVal.get("SubscriberName");
-				String RequestType=retVal.get("RequestType");
-				String BranchName=retVal.get("BranchName");
-				String  RequestStatus=retVal.get("RequestStatus");
-				List<Node> nodes=OTUtility.getChildren(authToken,85457);//parent ID
-				List<Node> nodes2=OTUtility.excludedNodes(authToken,85457);
-				System.out.println("Path    "+System.getProperty("java.io.tmpdir"));
+				
+					List<Node> nodes=new ArrayList<Node>();
+					
+					String authToken=null;
+				try
+				{
+					authToken=OTUtility.getAuthToken(USERNAME, PASSWORD);
+				
+					
+					if(authToken!=null || authToken.trim().equals(""))
+					{
+						
+						
+						nodes=OTUtility.getChildren(authToken,46418);//parent ID
+						//nodes2=OTUtility.excludedNodes(authToken,85457);
+					}
+				}
+				catch(Exception e)
+				{
+					out.print("<script>alert('Error occurred while loading this page')</script>");
+					
+				}
+					
+				//System.out.println("Path    "+System.getProperty("java.io.tmpdir"));
 				
 			%>	
 			
 			
-
-	<div style="min-height: 117px; ">
-		<table  width="100%" border="0" class="level1table"  align="Right">
-			<tbody >
-				<tr>
-					<td align="right" class="lavel1td browseRow2"><%= RequestType%></td>
-					<td align="right" class="lavel1td browseRow2">Request Type</td>
-					<td align="right" class="lavel1td browseRow2"><%= RequestNumber%></td>
-					<td align="right" class="lavel1td browseRow2">Request ID</td>
-					
-				</tr>
-				<tr>
-					<td align="right" class="lavel1td browseRow2"><%= BranchName%></td>
-					<td align="right" class="lavel1td browseRow2">Office</td>
-					<td align="right" class="lavel1td browseRow2"><%= RequestDate %></td>
-					<td align="right" class="lavel1td browseRow2">Creation Date</td>
-					
-				</tr>
-				<tr>
-					<td align="right" class="lavel1td browseRow2"><%= RequestStatus %></td>
-					<td align="right" class="lavel1td browseRow2">Req Status</td>
-					<td align="right" class="lavel1td browseRow2"><%=SubscriberName %></td>
-					<td align="right" class="lavel1td browseRow2">Customer Name</td>	
-				</tr>
-				<tr>
-					<td></td>
-					<td></td>
-					<td align="right" class="lavel1td browseRow2"></td>	
-					<td align="right" class="lavel1td browseRow2">Customer ID</td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
+	
+	
 		<div style="margin-top:-10 px;">
 	
 			
 			<c:set var="n" value="<%=nodes%>"/>
-			<c:set var="k" value="<%=nodes2%>"/>
+			<c:set var="k" value="<%=nodes%>"/>
 			<div id="tabs"  >
   				
 				<ul>
@@ -489,7 +255,7 @@
 					<li class="tabs"><a href="#tabs-2">Excluded</a></li>
 					<li class="tabs"><a href="#tabs-3">Comments</a></li>
 					<div class="options">
-  						<select class="" onchange="downloadAllFiles();" onfocus="this.selectedIndex = -1;">
+  						<select id='selectlist' class="" onchange="downloadAllFiles();" onfocus="this.selectedIndex = -1;">
   							<option id="#">--Select--</option>
 						  	<option id="Scan">Scan</option>
 						  	<option id="Display">Display</option>
@@ -497,13 +263,14 @@
 						  	<option id="Copy">Copy</option>
 						  	<option id="Move">Move</option>
 						  	<option id="Exclude">Exclude</option>
-						  	<option value="Retrieve">Retrieve</option>
+						  	<option value="Retrieve" id="Retrieve">Retrieve</option>
 						 	<!--<option id="Delete">Delete</option>-->
-						  	<option value="Send">Send</option>
+						  	<option id="Send">Send</option>
 						</select>
   					</div>
 				</ul>
 				<div id="tabs-1">
+				
 				 <form name=form1 method=post>
 	   				<table id="CScontent" width="100%" border="0" cellspacing="1" cellpadding="0" class="browseTable updatedBrowse">
 						<thead>
@@ -519,6 +286,28 @@
 						    </tr>
 						</thead>
 						<c:forEach items="${n}" var="element">
+						<c:choose>
+							<c:when test='<%= OTUtility.getNodeExcluded((Node)pageContext.getAttribute("element")) %>'>
+									<tr class="browseRow2" style="background-color: red !important;">
+										<td align="right" class="browseRow2">
+							    			<a href="#" id="${element.getID()}" onclick="downlaodFile(this.id,'download');" title="Download">Download</a>
+							    			<div id="z85229" class="functionMenuDiv"></div>
+								    	</td>
+										<td align="right"  class="browseRow2"><c:out value="${element.getID()}"/></td>
+									 	<td align="right"  class="browseRow2"><c:out value="${element.getComment()}"/></td>
+									 	<td align="right"  class="browseRow2"><c:out value="${element.getCreateDate()}"/></td>
+										<td align="right"  class="browseRow2">
+							    			<a class="browseItemNameContainer"><c:out value="${element.getName()}"/></a>
+							    			<div id="z85229" class="functionMenuDiv"></div>
+								    	</td>
+								    		
+								    	<td  class="browseListHeaderCheck ">
+											<input   type="checkbox" name="foo" id="ckb" value="${element.getID()}">
+										</td>
+												
+								    </tr>
+						    </c:when>
+						   	<c:otherwise>
 							<tr class="browseRow2">
 								<td align="right" class="browseRow2">
 					    			<a href="#" id="${element.getID()}" onclick="downlaodFile(this.id,'download');" title="Download">Download</a>
@@ -534,13 +323,17 @@
 						    		
 						    	<td  class="browseListHeaderCheck ">
 									<input   type="checkbox" name="foo" id="ckb" value="${element.getID()}">
-								</td>		
+								</td>
+										
 						    </tr>
+						     </c:otherwise>
+						   </c:choose>
 						</c:forEach>
 	 				</table>
 	 			</form>
 	  		</div>
   			<div id="tabs-2">
+  				
     			<form name=form1 method=post>
 	   				<table id="Exclude" width="100%" border="0" cellspacing="1" cellpadding="0" class="browseTable updatedBrowse">
 						<thead>
@@ -556,6 +349,7 @@
 						    </tr>
 						</thead>
 						<c:forEach items="${k}" var="element">
+							<c:if test='<%= OTUtility.getNodeExcluded((Node)pageContext.getAttribute("element")) %>'>
 							<tr class="browseRow2" style="color: red">
 								<td align="right" class="browseRow2">
 					    			<a href="#" id="${element.getID()}" onclick="downlaodFile(this.id,'download');" title="Download">Download</a>
@@ -573,6 +367,7 @@
 									<input   type="checkbox" name="foo" id="ckb" value="${element.getID()}">
 								</td>		
 						    </tr>
+						    </c:if>
 						</c:forEach>
 	 				</table>
 	 			</form>
@@ -582,19 +377,5 @@
     		</div>
 		</div>	
 		</div>
- 			<p class="copyright">
-				OpenText Content Server version 16. Copyright © 1995 - 2017 Open Text. All Rights Reserved.
-			</p>
-			<div id="dialog" class="model">
-				<div id="dwtcontrolContainer"></div>
-				<input type="button" value="Upload" onclick="upload()" />
-    			<input type="button" value="Exit" onclick="exit();" />
-   				<!--  <input type="button" value="Save" onclick="SaveWithFileDialog();" />-->
-   				<br />
-    			<!-- <label><input type="radio" value="jpg" name="ImageType" id="imgTypejpeg" />JPEG</label>
-   				<label><input type="radio" value="tif" name="ImageType" id="imgTypetiff" />TIFF</label>
-   				<label><input type="radio" value="pdf" name="ImageType" id="imgTypepdf" checked="checked" />PDF</label> -->
-			</div>	
-			
 </body>
 </html>
