@@ -1,0 +1,43 @@
+{WorkPhoneExt=0, 
+HomePhoneExt=0, 
+POBox=00000, 
+Email=A11111234@SE.COM.SA, 
+RequestID=172500086, 
+FamilyName=ﻩﺤﻴﻟﺠ ﻝﺍ, 
+LocCityName=ﺓﺩﺠ, 
+PlanNo=1, 
+PlotNo=1, 
+BldPermDate=0000/00/00, 
+TotalArea=0, 
+RequestDate=10/29/2017, 
+GrandFatherName=ﻩﺤﻴﻟﺠ ﻝﺍ, 
+BookDate=, 
+TotalKVA=0, 
+WorkPhone=0, 
+FirstName=ﺓﻴﺭﻗ, 
+DeedNo=0000/00/00, 
+LocAddress=1, 
+UseCode=1, 
+CityName=ﺎﻬﺒﺃ, 
+Nationality=ﻱﺩﻭﻌﺴ, 
+DeedDate=null, 
+TotalAmpere=0, 
+BldPermNo=,
+ MobileNumber=0567662338, 
+ VoltID=1, 
+ 
+ 
+ 
+ 
+ unit type = multiple values
+ HomePhone=0, 
+ CustID=1111111116, 
+ FullName=ﻥﺎﻁﺤﻗ ﻩﺤﻴﻟﺠ ﻝﺍ ﺓﻴﺭﻗ, 
+ BookCityName=, 
+ PostCode=0, 
+ FatherName=ﻩﺤﻴﻟﺠ ﻝﺍ, 
+ RequestType=4}
+ 
+ 
+ 
+ 
