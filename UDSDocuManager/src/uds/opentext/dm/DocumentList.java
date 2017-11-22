@@ -216,6 +216,39 @@ public class DocumentList extends HttpServlet {
 			}
 		}
 		
+		if(action.equals("Retrieve"))
+		{
+			String categoryID=prop.getProperty("UDS.CategoryTemplateID");
+			
+			System.out.println("Category ID: "+categoryID);
+			int categoryTemplateID = 0;
+			if(categoryID!=null && !categoryID.equals(""))
+			{
+				categoryTemplateID=Integer.valueOf(categoryID);
+			}
+			else
+			{
+				LOGGER.error("Category Template ID is missing or not valid");
+			}
+			//System.out.println("in post");
+			//String par=request.getParameter("parentID");
+			String dataArray=request.getParameter("dataID");
+			String [] dataIDs=dataArray.split(",");
+			//String data=request.getParameter("dataID");
+			if((dataIDs.length!=0))
+			{
+				for(String s: dataIDs)
+				{
+					if(s!=null&&!s.equals(""))
+					{
+						int dataid=Integer.valueOf(s);
+						OTUtility.updateExcludeCategory(authToken,dataid,categoryTemplateID);
+						PrintWriter os=response.getWriter();
+						os.write("<script type=text/javascript"+">window.close()</script>");
+					}
+				}
+			}
+		}
 		
 		
 		 
