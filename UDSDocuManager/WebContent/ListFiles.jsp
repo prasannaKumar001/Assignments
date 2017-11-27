@@ -15,7 +15,7 @@
 <% int x=1;  %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<html dir="rtl" lang="ar">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="x-ua-compatible" content="IE=edge">
@@ -196,7 +196,19 @@
 			body{
 				min-height: 600px;
 				max-height: 600px;
-			}		
+			}
+			
+			table.dataTable tbody th, table.dataTable tbody td{
+				padding: 8px 3px;
+			}	
+			
+			.options{
+				text-align: left;
+			}	
+			
+			.dataTables_wrapper .dataTables_filter{
+				padding: 5px;
+			}
 	</style>
 <title>OpenText Document List</title>
 </head>
@@ -207,7 +219,14 @@
 				prop.load(getServletContext().getResourceAsStream("/WEB-INF/config.properties"));
 				String USERNAME=prop.getProperty("UDS.USERNAME");
 				String PASSWORD=prop.getProperty("UDS.PASSWORD");
-
+				
+				String dataIDString=request.getParameter("RequestNumber");
+				int RequestNum=0;
+				if(dataIDString!=null && !dataIDString.trim().equals(""))
+				{
+					RequestNum=Integer.valueOf(dataIDString);
+				}
+				
 				System.out.print("USERNAME: "+USERNAME);
 				
 				//	String parentID=request.getParameter("parentID");
@@ -225,9 +244,11 @@
 					if(authToken!=null || authToken.trim().equals(""))
 					{
 						
-						
-						nodes=OTUtility.getChildren(authToken,46418);//parent ID
-						//nodes2=OTUtility.excludedNodes(authToken,85457);
+						if(RequestNum!=0)
+						{
+							nodes=OTUtility.getChildren(authToken,RequestNum);//parent ID
+							//nodes2=OTUtility.excludedNodes(authToken,85457);
+						}
 					}
 				}
 				catch(Exception e)
@@ -275,56 +296,52 @@
 	   				<table id="CScontent" width="100%" border="0" cellspacing="1" cellpadding="0" class="browseTable updatedBrowse">
 						<thead>
 							<tr class="browseListHeader">
-							 	<td class="browseListHeaderCheck"></td>
-							 	<td class="browseListHeaderName">Data ID</td>
-							 	<td class="browseListHeaderName">Comments</td>
-							 	<td class="browseListHeaderName">Created Date</td>
-						       	<td class="browseListHeaderName" >Documents</td>
-						       	<td class="browseListHeaderCheck" style="background-image: none";>
+								<td class="browseListHeaderName" style="background-image: none">
 							 		<input type="checkbox" name="top_checkbox" value="checkbox" onClick="toggle(this);">
 							 	</td>
+							 	<td class="browseListHeaderName" >Documents</td>
+							 	<td class="browseListHeaderName">Created Date</td>
+							 	<td class="browseListHeaderName">Comments</td>
+							 	<td class="browseListHeaderName">Data ID</td>
+							 	<td class="browseListHeaderName"></td>
 						    </tr>
 						</thead>
 						<c:forEach items="${n}" var="element">
 						<c:choose>
 							<c:when test='<%= OTUtility.getNodeExcluded((Node)pageContext.getAttribute("element")) %>'>
 									<tr class="browseRow2" style="background-color: red !important;">
-										<td align="right" class="browseRow2">
-							    			<a href="#" id="${element.getID()}" onclick="downlaodFile(this.id,'download');" title="Download">Download</a>
-							    			<div id="z85229" class="functionMenuDiv"></div>
-								    	</td>
-										<td align="right"  class="browseRow2"><c:out value="${element.getID()}"/></td>
-									 	<td align="right"  class="browseRow2"><c:out value="${element.getComment()}"/></td>
-									 	<td align="right"  class="browseRow2"><c:out value="${element.getCreateDate()}"/></td>
-										<td align="right"  class="browseRow2">
+										<td  class="browseRow2 ">
+											<input   type="checkbox" name="foo" id="ckb" value="${element.getID()}">
+										</td>
+										<td align="left"  class="browseRow2">
 							    			<a class="browseItemNameContainer"><c:out value="${element.getName()}"/></a>
 							    			<div id="z85229" class="functionMenuDiv"></div>
 								    	</td>
-								    		
-								    	<td  class="browseListHeaderCheck ">
-											<input   type="checkbox" name="foo" id="ckb" value="${element.getID()}">
-										</td>
-												
+								    	<td align="left"  class="browseRow2"><c:out value="${element.getCreateDate()}"/></td>
+										<td align="left"  class="browseRow2"><c:out value="${element.getComment()}"/></td>
+										<td align="left"  class="browseRow2"><c:out value="${element.getID()}"/></td>
+										<td align="left" class="browseRow2">
+							    			<a href="#" id="${element.getID()}" onclick="downlaodFile(this.id,'download');" title="Download">Download</a>
+							    			<div id="z85229" class="functionMenuDiv"></div>
+								    	</td>
 								    </tr>
 						    </c:when>
 						   	<c:otherwise>
 							<tr class="browseRow2">
-								<td align="right" class="browseRow2">
-					    			<a href="#" id="${element.getID()}" onclick="downlaodFile(this.id,'download');" title="Download">Download</a>
-					    			<div id="z85229" class="functionMenuDiv"></div>
-						    	</td>
-								<td align="right"  class="browseRow2"><c:out value="${element.getID()}"/></td>
-							 	<td align="right"  class="browseRow2"><c:out value="${element.getComment()}"/></td>
-							 	<td align="right"  class="browseRow2"><c:out value="${element.getCreateDate()}"/></td>
-								<td align="right"  class="browseRow2">
+								<td  class="browseRow2 ">
+									<input   type="checkbox" name="foo" id="ckb" value="${element.getID()}">
+								</td>
+								<td align="left"  class="browseRow2">
 					    			<a class="browseItemNameContainer"><c:out value="${element.getName()}"/></a>
 					    			<div id="z85229" class="functionMenuDiv"></div>
 						    	</td>
-						    		
-						    	<td  class="browseListHeaderCheck ">
-									<input   type="checkbox" name="foo" id="ckb" value="${element.getID()}">
-								</td>
-										
+						    	<td align="left"  class="browseRow2"><c:out value="${element.getCreateDate()}"/></td>
+						    	<td align="left"  class="browseRow2"><c:out value="${element.getComment()}"/></td>
+						    	<td align="left"  class="browseRow2"><c:out value="${element.getID()}"/></td>
+								<td align="left" class="browseRow2">
+					    			<a href="#" id="${element.getID()}" onclick="downlaodFile(this.id,'download');" title="Download">Download</a>
+					    			<div id="z85229" class="functionMenuDiv"></div>
+						    	</td>
 						    </tr>
 						     </c:otherwise>
 						   </c:choose>
@@ -338,34 +355,39 @@
 	   				<table id="Exclude" width="100%" border="0" cellspacing="1" cellpadding="0" class="browseTable updatedBrowse">
 						<thead>
 							<tr class="browseListHeader">
-							 	<td class="browseListHeaderCheck"></td>
-							 	<td class="browseListHeaderName">Data ID</td>
-							 	<td class="browseListHeaderName">Comments</td>
-							 	<td class="browseListHeaderName">Created Date</td>
-						       	<td class="browseListHeaderName" >Documents</td>
-						       	<td class="browseListHeaderCheck" style="background-image: none";>
+								<td class="browseListHeaderCheck" style="background-image: none";>
 							 		<input type="checkbox" name="top_checkbox" value="checkbox" onClick="toggle(this);">
 							 	</td>
+							 	<td class="browseListHeaderName" >Documents</td>
+							 	<td class="browseListHeaderName">Created Date</td>
+							 	<td class="browseListHeaderName">Comments</td>
+							 	<td class="browseListHeaderName">Data ID</td>
+							 	<td class="browseListHeaderCheck"></td>
 						    </tr>
 						</thead>
 						<c:forEach items="${k}" var="element">
 							<c:if test='<%= OTUtility.getNodeExcluded((Node)pageContext.getAttribute("element")) %>'>
 							<tr class="browseRow2" style="color: red">
-								<td align="right" class="browseRow2">
-					    			<a href="#" id="${element.getID()}" onclick="downlaodFile(this.id,'download');" title="Download">Download</a>
-					    			<div id="z85229" class="functionMenuDiv"></div>
-						    	</td>
-								<td align="right"  class="browseRow2"><c:out value="${element.getID()}"/></td>
-							 	<td align="right"  class="browseRow2"><c:out value="${element.getComment()}"/></td>
-							 	<td align="right"  class="browseRow2"><c:out value="${element.getCreateDate()}"/></td>
-								<td align="right"  class="browseRow2">
+								<td  class="browseListHeaderCheck ">
+									<input   type="checkbox" name="foo" id="ckb" value="${element.getID()}">
+								</td>
+								<td align="left"  class="browseRow2">
 					    			<a class="browseItemNameContainer"><c:out value="${element.getName()}"/></a>
 					    			<div id="z85229" class="functionMenuDiv"></div>
 						    	</td>
+						    	<td align="left"  class="browseRow2"><c:out value="${element.getCreateDate()}"/></td>	
+						    	<td align="left"  class="browseRow2"><c:out value="${element.getComment()}"/></td>
+						    	<td align="left"  class="browseRow2"><c:out value="${element.getID()}"/></td>
+								<td align="left" class="browseRow2">
+					    			<a href="#" id="${element.getID()}" onclick="downlaodFile(this.id,'download');" title="Download">Download</a>
+					    			<div id="z85229" class="functionMenuDiv"></div>
+						    	</td>
+								
+							 	
+							 	
+								
 						    		
-						    	<td  class="browseListHeaderCheck ">
-									<input   type="checkbox" name="foo" id="ckb" value="${element.getID()}">
-								</td>		
+						    		
 						    </tr>
 						    </c:if>
 						</c:forEach>

@@ -40,6 +40,15 @@ public class UploadServlet extends HttpServlet {
 		String documentType=null;
 		String subscriberNumber=null;
 		
+		String dataIDString=request.getParameter("RequestNumber");
+		
+		int RequestNum=0;
+		if(dataIDString!=null && !dataIDString.trim().equals(""))
+		{
+			RequestNum=Integer.valueOf(dataIDString);
+			System.out.println("Request Numbr "+RequestNum);
+		}
+		
 		String categoryID=prop.getProperty("UDS.CategoryTemplateID");
 		int categoryTemplateID = 0;
 		if(categoryID!=null && !categoryID.equals(""))
@@ -127,17 +136,20 @@ public class UploadServlet extends HttpServlet {
                 	
                 }
             }
-	
-        // displays done.jsp page after upload finished
-        OTUtility.uploaddocument(authToken,filePath,46418,categoryTemplateID,subscriberNumber,documentType);
-        //getServletContext().getRequestDispatcher("/done.jsp").forward(request, response);
-        //response.
+            if(RequestNum!=0)
+            {
+            	// displays done.jsp page after upload finished
+            	OTUtility.uploaddocument(authToken,filePath,RequestNum,categoryTemplateID,subscriberNumber,documentType);
+            	//getServletContext().getRequestDispatcher("/done.jsp").forward(request, response);
+            	//response.
+            }
         
 		PrintWriter os=response.getWriter();
 		os.write("<script type=text/javascript"+">window.close()</script>");
 	    }
         catch (Exception ex)
         {
+        	LOGGER.error(ex.getMessage());
             throw new ServletException(ex);
         } 
 	    }

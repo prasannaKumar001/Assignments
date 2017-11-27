@@ -145,8 +145,10 @@ public class ScanUpload extends HttpServlet {
 	            //response.
 	      
 	        } catch (FileUploadException ex) {
+	        	LOGGER.error(ex.getMessage());
 	            throw new ServletException(ex);
 	        } catch (Exception ex) {
+	        	LOGGER.error(ex.getMessage());
 	            throw new ServletException(ex);
 	        }
 	
