@@ -13,8 +13,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
-
 import javax.xml.bind.JAXBElement;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.parsers.DocumentBuilder;
@@ -45,7 +43,7 @@ import org.w3c.dom.NodeList;
 
 public class XML {
 	
-	public static String createXML(ConnectionAgreement connectionAgreement)
+	public static String createXML(ConnectionAgreement connectionAgreement,String docType,String lang)
 	{
 		try
 		{
@@ -54,7 +52,9 @@ public class XML {
 			
 			Map<String,String>connectionAgrmntFlds=getCA(connectionAgreement);
 			Map<String,ArrayList<String>> unitItems= getUnitItems(connectionAgreement);
-			Map<String, String> properties=getProprties();
+			Map<String,ArrayList<String>> requestTypeItems= getRequestTypeItems(connectionAgreement);
+			Map<String, String> properties=getProprties("usageType");
+			Map<String, String> propertiesRequestType=getProprties("requestType");
 			
 			System.out.println(unitItems.size());
 			
@@ -74,12 +74,30 @@ public class XML {
 			Element rootElement = doc.createElement("Agreement");
 			doc.appendChild(rootElement);
 			
+			
+			
+			
 			Element requestNumber = doc.createElement("Reqid");
 			if(connectionAgrmntFlds.get("RequestID")!=null && !connectionAgrmntFlds.get("RequestID").trim().equals(""))
 			{
 				requestNumber.appendChild(doc.createTextNode(connectionAgrmntFlds.get("RequestID")));
 			}
 			rootElement.appendChild(requestNumber);	
+			
+			Element agrType = doc.createElement("AgreementType");
+			if(docType!=null && !docType.trim().equals(""))
+			{
+				agrType.appendChild(doc.createTextNode(docType));
+			}
+			rootElement.appendChild(agrType);
+			
+			Element language = doc.createElement("Language");
+			if(lang!=null && !lang.trim().equals(""))
+			{
+				language.appendChild(doc.createTextNode(lang.toUpperCase()));
+			}
+			rootElement.appendChild(language);
+			
 			
 			Element reqdate = doc.createElement("ReqDate");
 			if(connectionAgrmntFlds.get("RequestDate")!=null && !connectionAgrmntFlds.get("RequestDate").trim().equals(""))
@@ -88,12 +106,7 @@ public class XML {
 			}
 			rootElement.appendChild(reqdate);
 			
-			Element ReqType = doc.createElement("ReqType");
-			if(connectionAgrmntFlds.get("RequestType")!=null && !connectionAgrmntFlds.get("RequestType").trim().equals(""))
-			{
-				ReqType.appendChild(doc.createTextNode(connectionAgrmntFlds.get("RequestType")));
-			}
-			rootElement.appendChild(ReqType);
+			
 			
 			Element FirstName = doc.createElement("FirstName");
 			if(connectionAgrmntFlds.get("FirstName")!=null && !connectionAgrmntFlds.get("FirstName").trim().equals(""))
@@ -305,24 +318,80 @@ public class XML {
 			}
 			rootElement.appendChild(VoltId);
 			
+			
+			
+			Element ReqType = doc.createElement("ReqType");
+			rootElement.appendChild(ReqType);
+			if(requestTypeItems.size()>0)
+			{
+				ArrayList<String> reqTypeArray=requestTypeItems.get("RequestType");
+
+				for(int i=0;i<reqTypeArray.size();i++)
+				{
+					if(propertiesRequestType.get(reqTypeArray.get(i))!=null)
+					{
+						String node=propertiesRequestType.get(reqTypeArray.get(i));
+					
+						if(node!=null && !node.trim().equals(""))
+						{
+							NodeList nl = ReqType.getElementsByTagName(node);
+							if (nl.getLength() == 0) 
+							{
+								Element el= doc.createElement(node);
+								el.appendChild(doc.createTextNode("TRUE"));
+								ReqType.appendChild(el);
+							}
+						
+						}
+					}
+					else
+					{
+						NodeList nl = ReqType.getElementsByTagName("Other");
+						if (nl.getLength() == 0) 
+						{
+							Element el= doc.createElement("Other");
+							el.appendChild(doc.createTextNode("TRUE"));
+							ReqType.appendChild(el);
+						}
+					}
+				}
+			}
+			
+			
+			
+			
+			
 			Element UnitType = doc.createElement("UnitType");
 			rootElement.appendChild(UnitType);
 			if(UnitTypes.size()>0)
 			{
-				for(int i=0;i<UnitTypes.size()-1;i++)
+				for(int i=0;i<UnitTypes.size();i++)
 				{
-					String node=properties.get(UnitTypes.get(i));
-					
-					if(node!=null && !node.trim().equals(""))
+					if(properties.get(UnitTypes.get(i))!=null)
 					{
-						NodeList nl = UnitType.getElementsByTagName(node);
-						if (nl.getLength() == 0) {
-							
-							  Element el= doc.createElement(node);
-							  el.appendChild(doc.createTextNode("TRUE"));
-							  UnitType.appendChild(el);
-						}
+						String node=properties.get(UnitTypes.get(i));
+					
+						if(node!=null && !node.trim().equals(""))
+						{
+							NodeList nl = UnitType.getElementsByTagName(node);
+							if (nl.getLength() == 0) 
+							{
+								Element el= doc.createElement(node);
+								el.appendChild(doc.createTextNode("TRUE"));
+								UnitType.appendChild(el);
+							}
 						
+						}
+					}
+					else
+					{
+						NodeList nl = UnitType.getElementsByTagName("Other");
+						if (nl.getLength() == 0) 
+						{
+							Element el= doc.createElement("Other");
+							el.appendChild(doc.createTextNode("TRUE"));
+							UnitType.appendChild(el);
+						}
 					}
 				}
 			}
@@ -330,10 +399,14 @@ public class XML {
 			{
 				if(connectionAgrmntFlds.get("UseCode")!=null && !connectionAgrmntFlds.get("UseCode").trim().equals(""))
 				{
-					Element UseCode = doc.createElement("UseCode");
+					if(properties.get((connectionAgrmntFlds.get("UseCode")))!=null)
+					{
+						String useCode=properties.get((connectionAgrmntFlds.get("UseCode")));
+						Element UsageCode = doc.createElement(useCode);
 					
-					UseCode.appendChild(doc.createTextNode(connectionAgrmntFlds.get("UseCode")));
-					UnitType.appendChild(UseCode);
+						UsageCode.appendChild(doc.createTextNode("TRUE"));
+						UnitType.appendChild(UsageCode);
+					}
 				}
 			}
 			
@@ -341,7 +414,7 @@ public class XML {
 			
 			
 			
-			for(int i=0;i<UnitTypeNames.size()-1;i++)
+			for(int i=0;i<UnitTypeNames.size();i++)
 			{
 				
 				Element requestedServiceInfo = doc.createElement("RequestedServiceInfo");
@@ -418,8 +491,8 @@ public class XML {
               JAXBElement<LocationData> locaData=ca.getLocData();
               
               JAXBElement<RequestData> requestData=ca.getReqtData();
-              JAXBElement<ArrayOfRequestType> arrayOfRequestType=ca.getReqTypeList();
-              JAXBElement<ServiceResponse> serviceResponse=ca.getResponse();
+              
+              
              
               
               CustomerData custData=customerData.getValue();
@@ -427,8 +500,8 @@ public class XML {
               LocationData locData=locaData.getValue();
               
               RequestData reqData=requestData.getValue();
-              ArrayOfRequestType arrOfReqType=arrayOfRequestType.getValue();
-              ServiceResponse serResponse=serviceResponse.getValue();
+             
+              
              
               if(custData!=null)
               {
@@ -718,7 +791,7 @@ public class XML {
             	  {
             		  //System.out.println(reqDateVal);
             		  Date date = reqDateVal.toGregorianCalendar().getTime();
-            		  DateFormat  formatter = new SimpleDateFormat("MM/dd/yyyy");
+            		  DateFormat  formatter = new SimpleDateFormat("yyyy/MM/dd");
             		  String formattedDate  = formatter.format(date);
             		  //System.out.println("Formated Date: "+formattedDate);
             		  reqDate=formattedDate;	
@@ -763,27 +836,7 @@ public class XML {
             			  
               }
               
-              if(arrOfReqType!=null)
-              {
-            	  List<RequestType> reqTypeList=arrOfReqType.getRequestType();
-            	  RequestType requestType=null;
-            	  if(reqTypeList!=null && reqTypeList.size()>0)
-            	  {
-            		  requestType=reqTypeList.get(0);	  
-            	  }
-            	  
-            	  //RequestType
-            	  if(requestType!=null)
-            	  {
-            		  Short reqTypeVal=requestType.getReqType();
-            		  String reqType=null;
-            		  if(reqTypeVal!=null)
-            		  {
-            			  reqType=String.valueOf(reqTypeVal);
-            			  connectionAgreement.put("RequestType", reqType);
-            		  }
-            	  }
-              }
+              
            }
              
            
@@ -878,8 +931,45 @@ public class XML {
          connectionAgreement.put("UnitType",UnitTypes);
 		return connectionAgreement;
 	 }
+	
 	 
-	 public static Map<String,String> getProprties()
+	 public static Map<String,ArrayList<String>> getRequestTypeItems(ConnectionAgreement ca)
+	 {
+		 JAXBElement<ArrayOfRequestType> arrayOfRequestType=ca.getReqTypeList();
+		 ArrayList<String> reqTypeArray=new ArrayList<String>();
+		 Map<String,ArrayList<String>> RequestTypeItems =new HashMap<String,ArrayList<String>>();
+		 if(arrayOfRequestType!=null)
+		 {
+			 ArrayOfRequestType arrOfReqType=arrayOfRequestType.getValue();
+			 if(arrOfReqType!=null)
+			 {
+				 List<RequestType> reqTypeList=arrOfReqType.getRequestType();
+				 
+				 if(reqTypeList!=null && reqTypeList.size()>0)
+				 {
+					 for(RequestType req:reqTypeList)
+					 {
+						 if(req.getReqType()!=null)
+						 {
+							 Short reqType=req.getReqType();
+							 if(reqType!=null)
+							 {
+								 String reqTypeVal=String.valueOf(reqType);
+								 reqTypeArray.add(reqTypeVal);
+								 
+							 }
+						 }
+					 }
+				 }
+       	  
+				 RequestTypeItems.put("RequestType", reqTypeArray) ;
+			 }
+		 }
+		return RequestTypeItems;
+		 
+	 }
+	 
+	 public static Map<String,String> getProprties(String keyWord)
 	 {
 		Map<String,String> usageTypeValues=new HashMap<String,String>();
 		Properties prop = new Properties();
@@ -890,7 +980,7 @@ public class XML {
 			input = new FileInputStream("config.properties");
 			// load a properties file
 			prop.load(input);
-			String usageType=prop.getProperty("usageType");
+			String usageType=prop.getProperty(keyWord);
 			System.out.println(usageType);
 			
 			String [] UsageTypes = usageType.split(",");

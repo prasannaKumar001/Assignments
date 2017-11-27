@@ -366,7 +366,10 @@ if((document.getElementById("Send").selected))
 	*/
 	if((document.getElementById("Upload").selected))
 	{
-		var	w = window.open('http://'+serverIp+':8080/UDSDocuManager/upload.jsp','upload','directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=no,width=500,height=300');
+		
+		//alert(window.location.search.substr(1));
+		var RequestNumber=window.location.search.substr(1);
+		var	w = window.open('http://'+serverIp+':8080/UDSDocuManager/upload.jsp?'+RequestNumber,'upload','directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=no,width=500,height=300');
 
 		if ( w.focus )
 		{
