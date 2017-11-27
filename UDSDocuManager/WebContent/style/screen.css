@@ -981,6 +981,7 @@ This class defines the styling used by the div that contains the search bar drop
 		font-family:		Tahoma, Verdana, Geneva, Arial, Helvetica, sans-serif;
 		font-size: 			11px;
 		color: 				#333333;
+		text-align: left;
 }
 
 .browseRow2
@@ -1087,7 +1088,7 @@ This class defines the styling used by the div that contains the search bar drop
  *		webnode/browseview.html
  */
 .browseListHeaderName {
-		text-align:		right;
+		text-align:		left;
 		font-size:		11px;
 		
 }
@@ -1145,7 +1146,7 @@ This class defines the styling used by the div that contains the search bar drop
  *		webnode/browseview.html
  */
 .browseListHeaderSize {
-		text-align:		right;
+		text-align:		left;
 		font-size:		11px;
 }
 
@@ -1238,7 +1239,7 @@ This class defines the styling used by the div that contains the search bar drop
 }
 
  .browseListHeaderRightText {
-		text-align: right;
+		text-align: left;
 		font-size: 11px;
 }
 
@@ -1269,7 +1270,7 @@ numbers.
  *
  */
 .browseListHeaderNumber {
-		text-align: 	right;
+		text-align: 	left;
 		font-size:	11px;
 }
 

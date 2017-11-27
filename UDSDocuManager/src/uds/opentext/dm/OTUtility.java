@@ -55,6 +55,8 @@ import com.sun.xml.internal.ws.developer.JAXWSProperties;
 import com.sun.xml.internal.ws.developer.StreamingDataHandler;
 import com.sun.xml.internal.ws.developer.WSBindingProvider;
 
+import uds.opentext.dm.beans.Request;
+
 public class OTUtility {
 	
 	//public static final String USERNAME="otadmin@otds.admin";
@@ -295,8 +297,7 @@ public class OTUtility {
 			docManClient=OTUtility.getDocumentManagement(authToken);
 			nodes=docManClient.listNodes(parentID, false);
 			
-			//docManClient.createFolder(parentID,"Sucker","",null);
-			
+			//docManClient.createFolder(parentID,"Sucker","",null);			
 		}
 		catch(Exception e)
 		{
@@ -845,12 +846,12 @@ public class OTUtility {
 	}
 	
 	//
-	public static Map<String,String> getNode(String authToken,int dataID)
+	public static Request getNode(String authToken,int dataID)
 	{
 		DocumentManagement docManClient=null;
 		Node node = null;
 		Map<String,String> retVal=new HashedMap<String,String>();
-		
+		Request request=new Request();
 		try
 		{
 			docManClient=OTUtility.getDocumentManagement(authToken);
@@ -868,73 +869,86 @@ public class OTUtility {
 					{
 						if(atg!=null)
 						{
-							int i=0;
+							
 							values=atg.getValues();
 							for(DataValue data:values)
 							{
 								String dataType=data.getClass().getName();
-				    			
-				    			if(dataType.endsWith("StringValue"))
-				    			{
-				    				StringValue str = (StringValue) data;
+								if(data.getDescription().equals("Request Number"))
+								{
+									StringValue str = (StringValue) data;
 				    				List<String> dataValues=str.getValues();
 				    				for(String s:dataValues)
 				    				{	
-				    					retVal.put(data.getDescription(), s);
-				    					//System.out.println(s);
+				    					request.setRequestNumber(s);
+				    					
 				    				}
-					    			//str.getValues().add(true);
-				    				//System.out.println("String");
-				    			}
-				    			if(dataType.endsWith("DateValue"))
-				    			{
-				    				DateValue str = (DateValue) data;
+								}
+								if(data.getDescription().equals("Subscription Number"))
+								{
+									StringValue str = (StringValue) data;
+				    				List<String> dataValues=str.getValues();
+				    				for(String s:dataValues)
+				    				{	
+				    					request.setSubscriptionNumber(s);
+				    					
+				    				}	
+								}
+								if(data.getDescription().equals("Subscriber Name"))
+								{
+									StringValue str = (StringValue) data;
+				    				List<String> dataValues=str.getValues();
+				    				for(String s:dataValues)
+				    				{	
+				    					request.setCustomerName(s);
+				    					
+				    				}	
+								}
+								if(data.getDescription().equals("Create Date"))
+								{
+									DateValue str = (DateValue) data;
 				    				List<XMLGregorianCalendar> dataValues=str.getValues();
 				    				for(XMLGregorianCalendar s:dataValues)
 				    				{	
 				    					
 				    					Date d=s.toGregorianCalendar().getTime();
-				    					 try 
-				    					    {  
-				    					      
-				    					      DateFormat formatter; 
-				    					      Date date; 
-				    					      formatter = new SimpleDateFormat("MM/dd/yyyy");
-				    					      String d1=formatter.format(d);
-				    					      retVal.put(data.getDescription(),d1);
-				    					    } 
-				    					    catch (Exception e)
-				    					    {}
+				    					 
+				    					request.setCreatedDate(d);
+				    					    
 				    					//System.out.println();
 				    				}
-				    				//System.out.println("Date");
-				    			}
-				    			if(dataType.endsWith("BooleanValue"))
-				    			{
-				    				//System.out.println("boolean");
-				    				BooleanValue str = (BooleanValue) data;
-				    				List<Boolean> booleanValue=str.getValues();
-				    				for(Boolean b:booleanValue)
+								}
+								if(data.getDescription().equals("Request Type"))
+								{
+									StringValue str = (StringValue) data;
+				    				List<String> dataValues=str.getValues();
+				    				for(String s:dataValues)
 				    				{	
-				    					retVal.put(data.getDescription(), b.toString());
-				    					//System.out.println(b.toString());
-				    				}
-				    			}
-				    			if(dataType.endsWith("IntegerValue"))
-				    			{
-				    				IntegerValue val=(IntegerValue) data; 
-				    				List<Long> integerValue=val.getValues();
-				    				for(Long j:integerValue)
-				    				{
-				    					retVal.put(data.getDescription(), String.valueOf(j));
-				    				}
-				    			}
-								//System.out.println("value: "+atg.getValues().get(i));
-								//System.out.println(data.getDescription());
-								//System.out.println(data.getKey());
-								//System.out.println();
-								i++;
-							}
+				    					request.setRequestType(s);
+				    					
+				    				}	
+								}
+								if(data.getDescription().equals("Office"))
+								{
+									StringValue str = (StringValue) data;
+				    				List<String> dataValues=str.getValues();
+				    				for(String s:dataValues)
+				    				{	
+				    					request.setOffice(s);
+				    					
+				    				}		
+								}
+								if(data.getDescription().equals("Request Status"))
+								{
+									StringValue str = (StringValue) data;
+				    				List<String> dataValues=str.getValues();
+				    				for(String s:dataValues)
+				    				{	
+				    					request.setRequestStatus(s);		
+				    				}			
+								}
+								
+							}	
 						}
 					}
 				}
@@ -943,7 +957,7 @@ public class OTUtility {
 		catch (Exception e) {
 			// TODO: handle exception
 		}
-		return retVal;
+		return request;
 	}
 	
 	public static void downloadAllMailAttachments(String authToken,List<Integer> dataids)

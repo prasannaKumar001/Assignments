@@ -1,4 +1,5 @@
 
+<%@page import="uds.opentext.dm.beans.Request"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.HashMap"%>
 <%@page import="java.util.Map"%>
@@ -11,7 +12,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<html dir="rtl" lang="ar">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <meta http-equiv="x-ua-compatible" content="IE=edge">
@@ -49,21 +50,19 @@
 				prop.load(getServletContext().getResourceAsStream("/WEB-INF/config.properties"));
 				String USERNAME=prop.getProperty("UDS.USERNAME");
 				String PASSWORD=prop.getProperty("UDS.PASSWORD");
-
+				String dataIDString=request.getParameter("RequestNumber");
+				System.out.println(dataIDString);
+				int RequestNum=0;
+				if(dataIDString!=null && !dataIDString.trim().equals(""))
+				{
+					RequestNum=Integer.valueOf(dataIDString);
+					System.out.println("Request Numbr "+RequestNum);
+				}
 				System.out.print("USERNAME: "+USERNAME);
 				
 				//	String parentID=request.getParameter("parentID");
 			
-				//need to write logic to get parent id from DB
-				Map<String,String> retVal=new HashMap<String,String>();
-					List<Node> nodes=new ArrayList<Node>();
-					List<Node> nodes2=new ArrayList<Node>();
-					String RequestNumber="";
-					String RequestDate="";
-					String SubscriberName="";
-					String BranchName="";
-					String  RequestStatus="";
-					String RequestType="";
+					Request rqst=null;
 					String authToken=null;
 				try
 				{
@@ -72,17 +71,10 @@
 					
 					if(authToken!=null || authToken.trim().equals(""))
 					{
-						retVal=OTUtility.getNode(authToken, 46418);
-						
-						RequestNumber=retVal.get("Request Number");
-						RequestDate=retVal.get("Create Date");
-						SubscriberName=retVal.get("Subscriber Name");
-						RequestType=retVal.get("Request Type");
-						BranchName=retVal.get("Office");
-						RequestStatus=retVal.get("Request Status");
-						
-						
-						//nodes2=OTUtility.excludedNodes(authToken,85457);
+						if(RequestNum!=0)
+						{
+							rqst=OTUtility.getNode(authToken, RequestNum);
+						}
 					}
 				}
 				catch(Exception e)
@@ -95,36 +87,35 @@
 		<table  width="100%" border="0" class="level1table"  align="Right">
 			<tbody >
 				<tr>
-					<td align="right" class="lavel1td browseRow2" style="background-color:#FFFFFF; "><%=RequestType%></td>
-					<td align="right" class="lavel1td browseRow2" style="background-color:#FFFFFF; ">Request Type</td>
-					<td align="right" class="lavel1td browseRow2" style="background-color:#FFFFFF; "><%= RequestNumber%></td>
 					<td align="right" class="lavel1td browseRow2" style="background-color:#FFFFFF; ">Request ID</td>
-					
+					<td align="right" class="lavel1td browseRow2" style="background-color:#FFFFFF; "><%= rqst.getRequestNumber()%></td>
+					<td align="right" class="lavel1td browseRow2" style="background-color:#FFFFFF; ">Request Type</td>
+					<td align="right" class="lavel1td browseRow2" style="background-color:#FFFFFF; "><%= rqst.getRequestType()%></td>
 				</tr>
 				<tr>
-					<td align="right" class="lavel1td browseRow2" style="background-color:#FFFFFF; "><%= BranchName%></td>
-					<td align="right" class="lavel1td browseRow2" style="background-color:#FFFFFF; ">Office</td>
-					<td align="right" class="lavel1td browseRow2" style="background-color:#FFFFFF; "><%= RequestDate %></td>
 					<td align="right" class="lavel1td browseRow2" style="background-color:#FFFFFF; ">Creation Date</td>
-					
+					<td align="right" class="lavel1td browseRow2" style="background-color:#FFFFFF; "><%= rqst.getCreatedDate() %></td>
+					<td align="right" class="lavel1td browseRow2" style="background-color:#FFFFFF; ">Office</td>
+					<td align="right" class="lavel1td browseRow2" style="background-color:#FFFFFF; "><%= rqst.getOffice()%></td>
 				</tr>
 				<tr>
-					<td align="right" class="lavel1td browseRow2" style="background-color:#FFFFFF; "><%= RequestStatus %></td>
-					<td align="right" class="lavel1td browseRow2" style="background-color:#FFFFFF; ">Req Status</td>
-					<td align="right" class="lavel1td browseRow2" style="background-color:#FFFFFF; "><%=SubscriberName %></td>
 					<td align="right" class="lavel1td browseRow2" style="background-color:#FFFFFF; ">Customer Name</td>	
+					<td align="right" class="lavel1td browseRow2" style="background-color:#FFFFFF; "><%=rqst.getCustomerName() %></td>
+					<td align="right" class="lavel1td browseRow2" style="background-color:#FFFFFF; ">Req Status</td>
+					<td align="right" class="lavel1td browseRow2" style="background-color:#FFFFFF; "><%= rqst.getRequestStatus() %></td>	
 				</tr>
 				<tr>
-					<td></td>
-					<td></td>
-					<td align="right" class="lavel1td browseRow2" style="background-color:#FFFFFF; "></td>	
 					<td align="right" class="lavel1td browseRow2" style="background-color:#FFFFFF; ">Customer ID</td>
+					<td align="right" class="lavel1td browseRow2" style="background-color:#FFFFFF; "></td>	
+					<td></td>
+					<td></td>					
 				</tr>
+				
 			</tbody>
 		</table>
 	</div>
 	
-		<iframe id='myFrame' width="100%" height="450" scrolling="no" src="http://localhost:8080/UDSDocuManager/ListFiles.jsp">
+		<iframe id='myFrame' width="100%" height="450" scrolling="no" src="ListFiles.jsp?RequestNumber=<%= dataIDString %>">
 	
 	</iframe>
 	
@@ -149,7 +140,7 @@
 	
 	
 	<p class="copyright">
-				OpenText Content Server version 16. Copyright © 1995 - 2017 Open Text. All Rights Reserved.
+				OpenText Content Server version 16. Copyright © 1995 - 2017 Open Text All Rights Reserved    
 			</p>
 			
 			

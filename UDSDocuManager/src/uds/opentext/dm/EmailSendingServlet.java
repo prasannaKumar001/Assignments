@@ -22,12 +22,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
+
 /**
  * Servlet implementation class EmailSendingServlet
  */
 public class EmailSendingServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
+	static final Logger LOGGER = Logger.getLogger(DocumentList.class);   
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -108,6 +110,7 @@ public class EmailSendingServlet extends HttpServlet {
 			System.out.println("message sent successfully ");    
 		} catch (MessagingException e1) {
 			// TODO Auto-generated catch block
+			LOGGER.error(e1.getMessage());
 			e1.printStackTrace();
 		}
 		System.out.println(request.getParameter("recipient"));

@@ -1,7 +1,7 @@
 	 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
    pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<html dir="rtl" lang="ar">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <meta http-equiv="x-ua-compatible" content="IE=edge">
@@ -65,8 +65,11 @@
 <title>File Upload</title>
 </head>
 <body  id="container">
+	<%
+		String dataIDString=request.getParameter("RequestNumber");
+	%>
 <div>
-	<form  onsubmit="return validateForm()" action="UploadServlet" enctype="multipart/form-data" method="post">
+	<form  onsubmit="return validateForm()" action="UploadServlet?RequestNumber=<%= dataIDString%>" enctype="multipart/form-data" method="post">
 	<label>Select file to upload:</label>
 	<input type="file" name="dataFile" id="fileChooser"/><br/><br/>
 	<label >Document Type:</label>

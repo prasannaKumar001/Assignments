@@ -34,6 +34,8 @@ import com.sun.xml.internal.ws.api.message.Headers;
 import com.sun.xml.internal.ws.developer.JAXWSProperties;
 import com.sun.xml.internal.ws.developer.WSBindingProvider;
 
+import uds.opentext.dm.beans.Request;
+
 public class Tester {
 	
 	public static void uploaddocument(String authtoken,String filePath,int parentID,int categoryTemplateID)
@@ -146,10 +148,12 @@ public class Tester {
 		public static void main(String[] args) {
 			
 			String authtoken=OTUtility.getAuthToken("Otadmin@otds.admin", "SEC@crmp!2017");
-			List<Node> list=OTUtility.getChildren(authtoken, 46418);
-			boolean bool =OTUtility.getNodeExcluded(list.get(0));
+			//List<Node> list=OTUtility.getChildren(authtoken, 46418);
+			//boolean bool =OTUtility.getNodeExcluded(list.get(0));
+			Request req=OTUtility.getNode(authtoken, 46418);
 			
-			System.out.println(bool);
+			System.out.println(req.getCreatedDate().toString());
+			//System.out.println(bool);
 			//OTUtility.getNodeName(list.get(0));
 			
 		}
